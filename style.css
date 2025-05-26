@@ -5,7 +5,7 @@ body {
   font-family: Arial, sans-serif;
   text-align: center;
   padding: 40px;
-  position: relative; /* Added for .coin-display positioning */
+  position: relative; /* Important for positioning the coin */
 }
 
 h1 {
@@ -41,5 +41,10 @@ h1 {
   font-weight: bold;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+}
+
+.coin-icon {
+  width: 24px;
+  height: 24px;
 }
