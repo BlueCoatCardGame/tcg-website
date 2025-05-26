@@ -3,8 +3,10 @@ const battleCode = urlParams.get('code');
 
 console.log('battleCode:', battleCode); // Debug log
 
+const displayElement = document.getElementById('battleCodeDisplay');
+
 if (battleCode) {
-  document.body.innerHTML += <p>Battle code: <strong>${battleCode}</strong></p>;
+  displayElement.innerHTML = `Battle code: <strong>${battleCode}</strong>`;
 } else {
-  document.body.innerHTML += <p style="color: red;">No battle code found in URL.</p>;
+  displayElement.innerHTML = <span style="color: red;">No battle code found in URL.</span>;
 }

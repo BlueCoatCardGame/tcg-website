@@ -1,30 +1,45 @@
 
-    body {
-      background-color: #1e1e1e;
-      color: white;
-      font-family: Arial, sans-serif;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 40px;
-    }
+body {
+  background-color: #1e1e1e;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 40px;
+  position: relative; /* Added for .coin-display positioning */
+}
 
-    h1 {
-      font-size: 3rem;
-    }
+h1 {
+  font-size: 3rem;
+}
 
-    .button {
-      display: block;
-      width: 200px;
-      margin: 20px auto;
-      padding: 15px;
-      font-size: 1.2rem;
-      background-color: #444444;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      cursor: pointer;
-    }
+.button {
+  display: block;
+  width: 240px;
+  margin: 20px auto;
+  padding: 18px;
+  font-size: 1.4rem;
+  background-color: #444444;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
 
-    .button:hover {
-      background-color: #666;
-    }
+.button:hover {
+  background-color: #666;
+}
+
+.coin-display {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 1.5rem;
+  background-color: #333;
+  padding: 8px 14px;
+  border-radius: 10px;
+  color: gold;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
