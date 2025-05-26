@@ -9,5 +9,15 @@
   <button class="button">Deck</button>
   <button class="button">Locker</button>
   <button class="button">Shop</button>
+    <button id="shopButton" class="button">Shop</button>
+
+  <script>
+    // ✅ JavaScript now targets the correct button inside the page
+    document.getElementById('shopButton').addEventListener('click', function() {
+      window.location.href = 'shop.html'; // Make sure this file exists
+    });
+  </script>
+</body>
+</html>
 </body>
 </html>
