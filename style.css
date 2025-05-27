@@ -55,7 +55,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: 160px;   /* Increased row height */
-  gap: 24px 16px;          /* 24px vertical gap, 16px horizontal gap */
+  gap: 30px 12px;          /* 30px vertical gap, 12px horizontal gap */
   width: 90%;
   max-width: 800px;
   margin: 30px auto 0;
@@ -122,4 +122,17 @@ h1 {
 
 .back-button:hover {
   background-color: #ccc;
+}
+
+.card-slot-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 110px;
+}
+
+.card-label {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #ccc;
 }
