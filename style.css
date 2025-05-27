@@ -63,11 +63,6 @@ h1 {
   justify-items: center;
 }
 
-/* Removed hiding of 8th card slot */
-/* .card-pack-grid .card-slot:nth-child(8) {
-  display: none;
-} */
-
 .card-slot {
   width: 100%;
   max-width: 110px; /* Width of card */
