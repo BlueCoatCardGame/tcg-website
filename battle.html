@@ -9,7 +9,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-    // Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
       authDomain: "card-game-51dd7.firebaseapp.com",
@@ -29,28 +28,17 @@
   <h1>Battle Arena</h1>
   <p>Loading match...</p>
 
-  <!-- Placeholder for showing the battle code -->
+  <!-- Placeholder for showing the battle code and player info -->
   <p id="battleCodeDisplay"></p>
 
   <!-- Back to Hub button -->
   <button onclick="goBackToHub()" class="back-button">Back to Hub</button>
 
+  <!-- Your game logic -->
   <script src="battle.js" defer></script>
-
   <script>
     function goBackToHub() {
-      window.location.href = 'index.html'; // Change this if your hub page is named differently
-    }
-  </script>
-</body>
-</html>
-
-  <!-- Your game logic script -->
-  <script src="battle.js" defer></script>
-
-  <script>
-    function goBackToHub() {
-      window.location.href = 'index.html'; // Change if your hub page has a different name
+      window.location.href = 'index.html'; // Change if your hub page is named differently
     }
   </script>
 </body>
