@@ -8,30 +8,35 @@
   <h1>Welcome to the TCG Game Hub</h1>
 
   <button class="button">Deck</button>
-  <button class="button">Locker</button>
-  <!-- ✅ Only this Shop button is needed -->
+  <button id="lockerButton" class="button">Locker</button>
   <button id="shopButton" class="button">Shop</button>
 
+  <div class="join-battle-box">
+    <h2>Join a Battle</h2>
+    <input type="text" id="battleCodeInput" placeholder="Enter battle code">
+    <button onclick="joinBattle()">Join Battle</button>
+  </div>
+
   <script>
-    document.getElementById('shopButton').addEventListener('click', function() {
-      window.location.href = 'shop.html'; // Make sure this file exists in the same folder
+    // Redirect to shop
+    document.getElementById('shopButton').addEventListener('click', function () {
+      window.location.href = 'shop.html';
     });
+
+    // Redirect to locker
+    document.getElementById('lockerButton').addEventListener('click', function () {
+      window.location.href = 'locker.html';
+    });
+
+    // Join battle
+    function joinBattle() {
+      const code = document.getElementById('battleCodeInput').value.trim();
+      if (code) {
+        window.location.href = `battle.html?code=${encodeURIComponent(code)}`;
+      } else {
+        alert("Please enter a battle code.");
+      }
+    }
   </script>
-<div class="join-battle-box">
-  <h2>Join a Battle</h2>
-  <input type="text" id="battleCodeInput" placeholder="Enter battle code">
-  <button onclick="joinBattle()">Join Battle</button>
-</div>
-<script>
-  function joinBattle() {
-    const code = document.getElementById('battleCodeInput').value.trim();
-    if (code) {
-      window.location.href = `battle.html?code=${encodeURIComponent(code)}`;
-    } else {
-      alert("Please enter a battle code.");
-    }
-  }
-</script>
 </body>
 </html>
-
