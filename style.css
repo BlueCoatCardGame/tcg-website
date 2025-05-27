@@ -99,20 +99,31 @@ h1 {
   margin-left: 10px;
   cursor: pointer;
 }
-.join-battle-box {
-  margin-top: 20px;
+
+/* 📦 Extra Content Section (for scrollability) */
+.extra-content {
+  margin-top: 60px;
+  padding: 20px;
+  background-color: #252525;
+  border-radius: 12px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #ccc;
   text-align: center;
 }
-
-.join-battle-box input {
-  padding: 10px;
-  font-size: 16px;
-  width: 200px;
-}
-
-.join-battle-box button {
+.back-button {
+  display: block;
+  margin: 30px auto;
   padding: 10px 20px;
   font-size: 16px;
-  margin-left: 10px;
-  cursor: pointer;
+  background-color: #ddd;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #ccc;
 }
