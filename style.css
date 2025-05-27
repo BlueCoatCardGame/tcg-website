@@ -1,8 +1,9 @@
 
+
 body {
   background-color: #1e1e1e;
   color: white;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', Arial, sans-serif;
   text-align: center;
   padding: 40px;
   position: relative; /* Important for positioning the coin */
@@ -44,7 +45,31 @@ h1 {
   gap: 8px;
 }
 
+/* This can stay or be removed if not using a coin image anymore */
 .coin-icon {
   width: 24px;
   height: 24px;
+}
+
+/* 🎴 Card Pack Grid Area */
+.card-pack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 20px;
+  margin-top: 60px;
+  padding: 0 40px;
+}
+
+.card-slot {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background-color: #2e2e2e;
+  border: 2px dashed #555;
+  border-radius: 12px;
+  transition: background-color 0.3s;
+}
+
+.card-slot:hover {
+  background-color: #3a3a3a;
+  cursor: pointer;
 }
