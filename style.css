@@ -59,7 +59,6 @@ h1 {
   margin-top: 60px;
   padding: 0 40px;
 }
-
 .card-slot {
   width: 100%;
   aspect-ratio: 2 / 3;
@@ -72,4 +71,21 @@ h1 {
 .card-slot:hover {
   background-color: #3a3a3a;
   cursor: pointer;
+}
+.join-battle-box {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.join-battle-box input {
+  padding: 10px;
+  font-size: 16px;
+  width: 200px;
+}
+
+.join-battle-box button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-left: 10px;
+  cursor: pointer;
 }

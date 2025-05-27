@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Join a Battle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Welcome to the Battle Hub</h1>
+  
+  <div class="join-battle-box">
+    <input type="text" id="battleCodeInput" placeholder="Enter your battle code">
+    <button onclick="joinBattle()">Join Battle</button>
+  </div>
+
+  <script>
+    function joinBattle() {
+      const code = document.getElementById('battleCodeInput').value.trim();
+      if (code) {
+        // Redirect to the arena with the code
+        window.location.href = `battle.html?code=${encodeURIComponent(code)}`;
+      } else {
+        alert("Please enter a battle code.");
+      }
+    }
+  </script>
+</body>
+</html>
