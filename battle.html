@@ -19,7 +19,6 @@
       databaseURL: "https://card-game-51dd7-default-rtdb.firebaseio.com"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
   </script>
@@ -28,17 +27,17 @@
   <h1>Battle Arena</h1>
   <p>Loading match...</p>
 
-  <!-- Placeholder for showing the battle code and player info -->
+  <!-- Battle code + player info -->
   <p id="battleCodeDisplay"></p>
 
-  <!-- Back to Hub button -->
+  <!-- Back to Hub -->
   <button onclick="goBackToHub()" class="back-button">Back to Hub</button>
 
-  <!-- Your game logic -->
+  <!-- Game Logic -->
   <script src="battle.js" defer></script>
   <script>
     function goBackToHub() {
-      window.location.href = 'index.html'; // Change if your hub page is named differently
+      window.location.href = 'index.html'; // Update if your hub has a different filename
     }
   </script>
 </body>
