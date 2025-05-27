@@ -3,44 +3,55 @@
 <head>
   <title>Battle Arena</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
+      authDomain: "card-game-51dd7.firebaseapp.com",
+      projectId: "card-game-51dd7",
+      storageBucket: "card-game-51dd7.appspot.com",
+      messagingSenderId: "1059333480213",
+      appId: "1:1059333480213:web:9787cdf5da0242aebf531c",
+      databaseURL: "https://card-game-51dd7-default-rtdb.firebaseio.com"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+  </script>
 </head>
 <body>
   <h1>Battle Arena</h1>
   <p>Loading match...</p>
 
-  <!-- This is the placeholder for the battle code -->
+  <!-- Placeholder for showing the battle code -->
   <p id="battleCodeDisplay"></p>
 
   <!-- Back to Hub button -->
   <button onclick="goBackToHub()" class="back-button">Back to Hub</button>
 
-  <!-- JavaScript -->
   <script src="battle.js" defer></script>
+
   <script>
     function goBackToHub() {
-      window.location.href = 'index.html'; // Or your actual hub page
+      window.location.href = 'index.html'; // Change this if your hub page is named differently
     }
-  // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+  </script>
+</body>
+</html>
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
-  authDomain: "card-game-51dd7.firebaseapp.com",
-  projectId: "card-game-51dd7",
-  storageBucket: "card-game-51dd7.firebasestorage.app",
-  messagingSenderId: "1059333480213",
-  appId: "1:1059333480213:web:9787cdf5da0242aebf531c",
-  measurementId: "G-BC19WJ2564"
-};
+  <!-- Your game logic script -->
+  <script src="battle.js" defer></script>
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+  <script>
+    function goBackToHub() {
+      window.location.href = 'index.html'; // Change if your hub page has a different name
+    }
   </script>
 </body>
 </html>
