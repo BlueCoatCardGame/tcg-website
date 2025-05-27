@@ -1,3 +1,4 @@
+// Get the battle code from URL
 const urlParams = new URLSearchParams(window.location.search);
 const battleCode = urlParams.get('code');
 
@@ -10,23 +11,32 @@ if (battleCode) {
 
   const roomRef = firebase.database().ref('battles/' + battleCode);
 
+  // Listen for room data once
   roomRef.once('value', (snapshot) => {
     const roomData = snapshot.val();
 
     if (!roomData) {
-      // No room yet — this is Player 1
+      // No room data — Player 1 joins
       roomRef.set({
         player1: true
+      }).then(() => {
+        displayElement.innerHTML += `<br>You are <strong>Player 1</strong>`;
+        console.log("Player 1 has joined.");
+      }).catch((error) => {
+        console.error("Error setting Player 1:", error);
+        displayElement.innerHTML += `<br><span style="color:red;">Error joining battle.</span>`;
       });
-      displayElement.innerHTML += `<br>You are <strong>Player 1</strong>`;
-      console.log("Player 1 has joined.");
     } else if (!roomData.player2) {
-      // Room exists — this is Player 2
+      // Player 2 joins
       roomRef.update({
         player2: true
+      }).then(() => {
+        displayElement.innerHTML += `<br>You are <strong>Player 2</strong>`;
+        console.log("Player 2 has joined.");
+      }).catch((error) => {
+        console.error("Error updating Player 2:", error);
+        displayElement.innerHTML += `<br><span style="color:red;">Error joining battle.</span>`;
       });
-      displayElement.innerHTML += `<br>You are <strong>Player 2</strong>`;
-      console.log("Player 2 has joined.");
     } else {
       // Room full
       displayElement.innerHTML += `<br><span style="color:red;">This battle already has 2 players.</span>`;
