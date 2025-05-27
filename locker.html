@@ -4,6 +4,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Locker</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .class-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .class-tab {
+      padding: 10px 16px;
+      background-color: #2e2e2e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .class-tab:hover {
+      background-color: #444;
+    }
+
+    .class-tab.active {
+      background-color: #666;
+    }
+  </style>
 </head>
 <body>
   <h1>Your Locker</h1>
@@ -12,5 +40,19 @@
 
   <!-- Back Button -->
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
+
+  <!-- Class Tabs -->
+  <div class="class-tabs">
+    <button class="class-tab active">All</button>
+    <button class="class-tab">Debuffer</button>
+    <button class="class-tab">Mage</button>
+    <button class="class-tab">Support</button>
+    <button class="class-tab">Dps</button>
+    <button class="class-tab">Spirit</button>
+    <button class="class-tab">Hacker</button>
+  </div>
+
+  <!-- Spacer for scroll -->
+  <div style="height: 600px;"></div>
 </body>
 </html>
