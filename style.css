@@ -51,12 +51,11 @@ h1 {
   height: 24px;
 }
 
-/* 🎴 Card Pack Grid Area (4 columns, 2 rows for 8 cards) */
 .card-pack-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 140px; /* Height of each card */
-  gap: 16px;
+  grid-auto-rows: 160px;   /* Increased row height */
+  gap: 24px 16px;          /* 24px vertical gap, 16px horizontal gap */
   width: 90%;
   max-width: 800px;
   margin: 30px auto 0;
