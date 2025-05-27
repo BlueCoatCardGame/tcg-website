@@ -1,3 +1,4 @@
+console.log("✅ battle.js loaded");
 // Get the battle code from URL
 const urlParams = new URLSearchParams(window.location.search);
 const battleCode = urlParams.get('code');
