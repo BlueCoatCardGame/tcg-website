@@ -76,6 +76,20 @@ h1 {
 .card-slot-container:nth-child(7) { animation-delay: 1.2s; }
 .card-slot-container:nth-child(8) { animation-delay: 1.4s; }
 
+.card-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s;
+}
+
+.card-image:hover {
+  transform: scale(1.05);
+  animation: subtle-wiggle 0.8s infinite;
+}
+
 .card-label {
   margin-top: 8px;
   font-size: 0.9rem;
@@ -84,22 +98,19 @@ h1 {
   line-height: 1.2;
 }
 
-.join-battle-box {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.join-battle-box input {
-  padding: 10px;
-  font-size: 16px;
-  width: 200px;
-}
-
-.join-battle-box button {
-  padding: 10px 20px;
-  font-size: 16px;
-  margin-left: 10px;
+.card-slot-container button {
+  margin-top: 6px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
+}
+
+.card-slot-container button:hover {
+  background-color: #666;
 }
 
 .extra-content {
@@ -143,19 +154,4 @@ h1 {
   50%  { transform: rotate(0deg); }
   75%  { transform: rotate(-1deg); }
   100% { transform: rotate(0deg); }
-}
-
-/* NEW IMAGE CARD STYLE */
-.card-image {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
-  border-radius: 12px;
-  transition: transform 0.3s ease;
-  animation: subtle-wiggle 0.8s infinite;
-}
-
-.card-image:hover {
-  transform: scale(1.05);
-  cursor: pointer;
 }
