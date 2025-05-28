@@ -135,29 +135,30 @@
       });
     }
 
-    function triggerPackOpening(packName) {
-      const packOpening = document.getElementById('pack-opening');
-      const packImage = document.getElementById('pack-image');
-      const cardImage = document.getElementById('card-image');
+function triggerPackOpening(packName) {
+  const packOpening = document.getElementById('pack-opening');
+  const packImage = document.getElementById('pack-image');
+  const cardImage = document.getElementById('card-image');
 
-      packImage.src = `images/${packName.toLowerCase()} pack.jpg`;
-      cardImage.src = 'images/card-placeholder.jpg';
+  // Fix: Use correct file extensions per known pack images
+  const formattedName = packName.toLowerCase();
+  const fileExtension = (formattedName === 'generalist') ? 'png' : 'jpg';
+  packImage.src = `images/${formattedName} pack.${fileExtension}`;
+  cardImage.src = 'images/card-placeholder.jpg';
 
-      packOpening.classList.remove('hidden');
-      packImage.classList.remove('burst-animate');
-      cardImage.classList.add('hidden');
+  packOpening.classList.remove('hidden');
+  packImage.classList.remove('burst-animate');
+  cardImage.classList.add('hidden');
 
-      void packImage.offsetWidth;
-      packImage.classList.add('burst-animate');
+  void packImage.offsetWidth;
+  packImage.classList.add('burst-animate');
 
-      setTimeout(() => {
-        cardImage.classList.remove('hidden');
-      }, 600);
+  // Delay to build suspense before revealing card
+  setTimeout(() => {
+    cardImage.classList.remove('hidden');
+  }, 1200);
 
-      packOpening.onclick = () => {
-        packOpening.classList.add('hidden');
-      };
-    }
-  </script>
-</body>
-</html>
+  packOpening.onclick = () => {
+    packOpening.classList.add('hidden');
+  };
+}
