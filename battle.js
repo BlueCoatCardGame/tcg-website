@@ -8,7 +8,8 @@ const displayElement = document.getElementById('battleCodeDisplay');
 if (battleCode) {
   displayElement.innerHTML = `Battle code: <strong>${battleCode}</strong>`;
 
-  const roomRef = firebase.database().ref('battles/' + battleCode);
+  // Use the db variable you defined in your HTML Firebase init instead of firebase.database()
+  const roomRef = db.ref('battles/' + battleCode);
 
   roomRef.once('value')
     .then((snapshot) => {
