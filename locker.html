@@ -97,25 +97,8 @@
   <div id="spirit" class="card-grid hidden"></div>
   <div id="hacker" class="card-grid hidden"></div>
 
-  <!-- JavaScript -->
   <script>
-    // Generate cards dynamically
-    function generateCards(containerId, count, labelPrefix) {
-      const container = document.getElementById(containerId);
-      for (let i = 1; i <= count; i++) {
-        const cardDiv = document.createElement('div');
-        cardDiv.innerHTML = `
-          <div class="card-slot"></div>
-          <div class="card-label">${labelPrefix} ${i}</div>
-        `;
-        container.appendChild(cardDiv);
-      }
-    }
-
-    generateCards('all', 72, 'Card');
-    generateCards('debuffer', 12, 'Debuffer');
-
-    // Tab switching
+    // Tab switching logic
     const tabs = document.querySelectorAll('.class-tab');
     const grids = document.querySelectorAll('.card-grid');
 
@@ -132,6 +115,39 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
+
+    // Generate cards
+    const cardCounts = {
+      all: 72,
+      debuffer: 12,
+      mage: 12,
+      support: 12,
+      dps: 12,
+      spirit: 12,
+      hacker: 12
+    };
+
+    Object.entries(cardCounts).forEach(([id, count]) => {
+      const container = document.getElementById(id);
+      for (let i = 1; i <= count; i++) {
+        const wrapper = document.createElement('div');
+
+        const slot = document.createElement('div');
+        slot.className = 'card-slot';
+
+        const label = document.createElement('div');
+        label.className = 'card-label';
+        label.textContent = `${capitalize(id)} ${i}`;
+
+        wrapper.appendChild(slot);
+        wrapper.appendChild(label);
+        container.appendChild(wrapper);
+      }
+    });
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
   </script>
 </body>
 </html>
