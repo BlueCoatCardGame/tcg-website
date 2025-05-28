@@ -38,7 +38,7 @@ if (battleCode) {
         });
       } else {
         // Room is full
-        displayElement.innerHTML += `<br><span style="color:red;">This battle already has 2 players. Try another code.</span>`;
+        displayElement.innerHTML += `<br><span style="color:red;">This battle already has 2 players.</span>`;
         console.log("Battle is full.");
       }
     })
