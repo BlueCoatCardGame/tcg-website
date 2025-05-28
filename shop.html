@@ -1,187 +1,114 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shop</title>
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-</head>
-<body>
-
-  <div class="coin-display">
-    💰 <span id="coinCount">0</span>
-  </div>
-
-  <h1>Welcome to the Shop!</h1>
-
-  <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
-
-  <!-- Card Pack Grid -->
-  <div class="card-pack-grid">
-    <div class="card-slot-container">
-      <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
-      <div class="card-label">Generalist Pack - 150 coins</div>
-      <button onclick="buyPack('Generalist', 150)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack">
-      <div class="card-label">Debuffer Pack - 200 coins</div>
-      <button onclick="buyPack('Debuffer', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/mage pack.jpg" class="card-image" alt="Mage Pack">
-      <div class="card-label">Mage Pack - 200 coins</div>
-      <button onclick="buyPack('Mage', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/support pack.jpg" class="card-image" alt="Support Pack">
-      <div class="card-label">Support Pack - 200 coins</div>
-      <button onclick="buyPack('Support', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/dps pack.jpg" class="card-image" alt="DPS Pack">
-      <div class="card-label">DPS Pack - 200 coins</div>
-      <button onclick="buyPack('Dps', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack">
-      <div class="card-label">Spirit Pack - 200 coins</div>
-      <button onclick="buyPack('Spirit', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack">
-      <div class="card-label">Hacker Pack - 200 coins</div>
-      <button onclick="buyPack('Hacker', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack">
-      <div class="card-label">Specialist Pack - 500 coins</div>
-      <button onclick="buyPack('Special', 500)">Buy</button>
-    </div>
-  </div>
-
-  <div class="extra-content">
-    <h2>More Coming Soon...or is it?</h2>
-    <p>Stay tuned for exclusive card packs and special offers.</p>
-    <div style="height: 400px;"></div>
-  </div>
-
-  <!-- Pack Opening Modal -->
-  <div id="pack-opening" class="pack-opening hidden">
-    <div class="burst-pack">
-      <img id="pack-image" src="" alt="Pack" class="pack-image">
-      <img id="card-image" src="images/card-placeholder.jpg" alt="Card" class="card-image hidden">
-    </div>
-  </div>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
-      authDomain: "card-game-51dd7.firebaseapp.com",
-      projectId: "card-game-51dd7",
-      storageBucket: "card-game-51dd7.appspot.com",
-      messagingSenderId: "1059333480213",
-      appId: "1:1059333480213:web:9787cdf5da0242aebf531c",
-      databaseURL: "https://card-game-51dd7-default-rtdb.firebaseio.com"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
-
-    let currentUserId = null;
-    let currentCoins = 0;
-
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        currentUserId = user.uid;
-        const coinsRef = db.ref(`users/${currentUserId}/coins`);
-        coinsRef.on('value', snapshot => {
-          currentCoins = snapshot.val() ?? 0;
-          document.getElementById('coinCount').textContent = currentCoins;
-        });
-      } else {
-        alert("You must be logged in to view the shop.");
-        window.location.href = 'index.html';
-      }
-    });
-
-    function buyPack(packName, packCost) {
-      if (currentCoins < packCost) {
-        alert("Not enough coins!");
-        return;
-      }
-
-      const userRef = db.ref(`users/${currentUserId}`);
-      userRef.transaction(userData => {
-        if (userData) {
-          if ((userData.coins ?? 0) >= packCost) {
-            userData.coins -= packCost;
-            userData.packs = userData.packs || {};
-            userData.packs[packName] = (userData.packs[packName] || 0) + 1;
-            return userData;
-          }
-        }
-        return userData;
-      }).then(() => {
-        triggerPackOpening(packName);
-      }).catch(err => {
-        console.error("Purchase failed:", err);
-        alert("Something went wrong.");
-      });
-    }
-
-function triggerPackOpening(packName) {
-  const packOpening = document.getElementById('pack-opening');
-  const packImage = document.getElementById('pack-image');
-  const cardImage = document.getElementById('card-image');
-
-  // Fix pack image extension issues explicitly
-  const formattedName = packName.toLowerCase();
-  const packExt = (formattedName === 'generalist') ? 'png' : 'jpg';
-  
-  // We'll simulate 3 stages of the pack opening by toggling CSS classes or changing opacity
-  // For now, just keep the same pack image for simplicity
-  packImage.src = `images/${formattedName} pack.${packExt}`;
-  cardImage.src = 'images/card-placeholder.jpg';
-  
-  // Reset UI
-  cardImage.classList.add('hidden');
-  packImage.style.cursor = 'pointer';
-
-  let clicksNeeded = 3;
-  let clicksDone = 0;
-
-  packOpening.classList.remove('hidden');
-
-  // Remove any previous click handler to avoid stacking
-  packImage.onclick = () => {
-    clicksDone++;
-    if (clicksDone < clicksNeeded) {
-      // Optional: Add some subtle feedback on each click
-      packImage.style.transform = 'scale(1.1)';
-      setTimeout(() => {
-        packImage.style.transform = 'scale(1)';
-      }, 150);
-    } else {
-      // Reveal the card image on last click
-      cardImage.classList.remove('hidden');
-      packImage.style.cursor = 'default';
-      packImage.onclick = null;  // disable further clicks
-    }
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
+    authDomain: "card-game-51dd7.firebaseapp.com",
+    projectId: "card-game-51dd7",
+    storageBucket: "card-game-51dd7.appspot.com",
+    messagingSenderId: "1059333480213",
+    appId: "1:1059333480213:web:9787cdf5da0242aebf531c",
+    databaseURL: "https://card-game-51dd7-default-rtdb.firebaseio.com"
   };
 
-  // Close modal on clicking outside the images
-  packOpening.onclick = (e) => {
-    if (e.target === packOpening) {
-      packOpening.classList.add('hidden');
-      // Clean up click handlers
-      packImage.onclick = null;
-      packOpening.onclick = null;
-    }
-  };
-}
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  let currentUserId = null;
+  let currentCoins = 0;
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUserId = user.uid;
+      const coinsRef = db.ref(`users/${currentUserId}/coins`);
+      coinsRef.on('value', snapshot => {
+        currentCoins = snapshot.val() ?? 0;
+        document.getElementById('coinCount').textContent = currentCoins;
+      });
+    } else {
+      alert("You must be logged in to view the shop.");
+      window.location.href = 'index.html';
+    }
+  });
+
+  function buyPack(packName, packCost) {
+    if (currentCoins < packCost) {
+      alert("Not enough coins!");
+      return;
+    }
+
+    const userRef = db.ref(`users/${currentUserId}`);
+
+    userRef.transaction(userData => {
+      if (userData) {
+        if ((userData.coins ?? 0) >= packCost) {
+          userData.coins -= packCost;
+          userData.packs = userData.packs || {};
+          userData.packs[packName] = (userData.packs[packName] || 0) + 1;
+          return userData;
+        } else {
+          // Abort transaction: not enough coins
+          return;
+        }
+      }
+      return userData;
+    }, (error, committed, snapshot) => {
+      if (error) {
+        console.error("Transaction failed abnormally!", error);
+        alert("Something went wrong. Please try again.");
+      } else if (!committed) {
+        alert("Not enough coins!");
+      } else {
+        // Success! Open the pack
+        triggerPackOpening(packName);
+      }
+    });
+  }
+
+  function triggerPackOpening(packName) {
+    const packOpening = document.getElementById('pack-opening');
+    const packImage = document.getElementById('pack-image');
+    const cardImage = document.getElementById('card-image');
+
+    // Fix pack image extension issues explicitly
+    const formattedName = packName.toLowerCase();
+    const packExt = (formattedName === 'generalist') ? 'png' : 'jpg';
+
+    packImage.src = `images/${formattedName} pack.${packExt}`;
+    cardImage.src = 'images/card-placeholder.jpg';
+
+    // Reset UI
+    cardImage.classList.add('hidden');
+    packImage.style.cursor = 'pointer';
+
+    let clicksNeeded = 3;
+    let clicksDone = 0;
+
+    packOpening.classList.remove('hidden');
+
+    // Remove any previous click handler to avoid stacking
+    packImage.onclick = () => {
+      clicksDone++;
+      if (clicksDone < clicksNeeded) {
+        // Optional subtle feedback
+        packImage.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          packImage.style.transform = 'scale(1)';
+        }, 150);
+      } else {
+        // Reveal the card on last click
+        cardImage.classList.remove('hidden');
+        packImage.style.cursor = 'default';
+        packImage.onclick = null;
+      }
+    };
+
+    // Close modal on clicking outside images
+    packOpening.onclick = (e) => {
+      if (e.target === packOpening) {
+        packOpening.classList.add('hidden');
+        packImage.onclick = null;
+        packOpening.onclick = null;
+      }
+    };
+  }
+</script>
