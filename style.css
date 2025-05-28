@@ -76,21 +76,6 @@ h1 {
 .card-slot-container:nth-child(7) { animation-delay: 1.2s; }
 .card-slot-container:nth-child(8) { animation-delay: 1.4s; }
 
-.card-slot {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  background-color: #2e2e2e;
-  border: 2px dashed #555;
-  border-radius: 12px;
-  transition: background-color 0.3s;
-}
-
-.card-slot:hover {
-  background-color: #3a3a3a;
-  cursor: pointer;
-  animation: subtle-wiggle 0.8s infinite;
-}
-
 .card-label {
   margin-top: 8px;
   font-size: 0.9rem;
@@ -158,4 +143,19 @@ h1 {
   50%  { transform: rotate(0deg); }
   75%  { transform: rotate(-1deg); }
   100% { transform: rotate(0deg); }
+}
+
+/* NEW IMAGE CARD STYLE */
+.card-image {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+  animation: subtle-wiggle 0.8s infinite;
+}
+
+.card-image:hover {
+  transform: scale(1.05);
+  cursor: pointer;
 }

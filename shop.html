@@ -24,42 +24,42 @@
   <!-- Card Pack Grid -->
   <div class="card-pack-grid">
     <div class="card-slot-container">
-      <div class="card-slot"></div>
+      <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
       <div class="card-label">Generalist Pack - 150 coins</div>
       <button onclick="buyPack('Generalist', 150)">Buy</button>
     </div>
     <div class="card-slot-container">
-      <div class="card-slot"></div>
+      <img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack">
       <div class="card-label">Debuffer Pack - 200 coins</div>
       <button onclick="buyPack('Debuffer', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
-      <div class="card-slot"></div>
+      <img src="images/mage pack.jpg" class="card-image" alt="Mage Pack">
       <div class="card-label">Mage Pack - 200 coins</div>
       <button onclick="buyPack('Mage', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
-      <div class="card-slot"></div>
+      <img src="images/support pack.jpg" class="card-image" alt="Support Pack">
       <div class="card-label">Support Pack - 200 coins</div>
       <button onclick="buyPack('Support', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
-      <div class="card-slot"></div>
+      <img src="images/dps pack.jpg" class="card-image" alt="DPS Pack">
       <div class="card-label">DPS Pack - 200 coins</div>
       <button onclick="buyPack('Dps', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
-      <div class="card-slot"></div>
+      <img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack">
       <div class="card-label">Spirit Pack - 200 coins</div>
       <button onclick="buyPack('Spirit', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
-      <div class="card-slot"></div>
+      <img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack">
       <div class="card-label">Hacker Pack - 200 coins</div>
       <button onclick="buyPack('Hacker', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
-      <div class="card-slot"></div>
+      <img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack">
       <div class="card-label">Specialist Pack - 500 coins</div>
       <button onclick="buyPack('Special', 500)">Buy</button>
     </div>
@@ -114,17 +114,12 @@
         if (userData) {
           if ((userData.coins ?? 0) >= packCost) {
             userData.coins -= packCost;
-
-            // Create packs array if not exist
             if (!userData.packs) userData.packs = {};
-
-            // Increment the count of the purchased pack
             if (!userData.packs[packName]) {
               userData.packs[packName] = 1;
             } else {
               userData.packs[packName]++;
             }
-
             return userData;
           }
         }
