@@ -7,23 +7,29 @@ console.log('battleCode:', battleCode);
 if (!battleCode) {
   displayElement.innerHTML = '<span style="color: red;">No battle code found in URL.</span>';
 } else {
-  // Set up loading message with animated dots
-  const loadingText = document.createElement('div');
+  // Clear the display
+  displayElement.innerHTML = '';
+
+  // Add battle code line
+  const codeLine = document.createElement('div');
+  codeLine.innerHTML = `Battle code: <strong>${battleCode}</strong>`;
+  displayElement.appendChild(codeLine);
+
+  // Animated loading message
+  const loadingLine = document.createElement('div');
   const loadingPrefix = document.createElement('span');
   const loadingDots = document.createElement('span');
 
   loadingPrefix.textContent = 'Loading match';
-  loadingText.appendChild(loadingPrefix);
-  loadingText.appendChild(loadingDots);
+  loadingLine.appendChild(loadingPrefix);
+  loadingLine.appendChild(loadingDots);
+  displayElement.appendChild(loadingLine);
 
-  displayElement.innerHTML = `Battle code: <strong>${battleCode}</strong><br>`;
-  displayElement.appendChild(loadingText);
-
-  // Add container for status message (e.g., Player 1, full match)
+  // Status message (e.g., Player 1, full room, etc.)
   const statusMessage = document.createElement('div');
   displayElement.appendChild(statusMessage);
 
-  // Animate loading dots
+  // Animate dots: ".", "..", "..." loop
   let dotCount = 0;
   const maxDots = 3;
   setInterval(() => {
@@ -34,7 +40,7 @@ if (!battleCode) {
   const connectedRef = db.ref(".info/connected");
   const roomRef = db.ref('battles/' + battleCode);
 
-  // DEBUG: Listen to room state changes
+  // Debug log room changes
   roomRef.on("value", (snapshot) => {
     console.log("Room state changed:", snapshot.val());
   });
@@ -44,7 +50,7 @@ if (!battleCode) {
       roomRef.once("value").then((snapshot) => {
         const roomData = snapshot.val() || {};
 
-        // Clean up ghost players
+        // Clean ghost players
         const updates = {};
         if (roomData.player1 && typeof roomData.player1 !== "boolean") updates.player1 = null;
         if (roomData.player2 && typeof roomData.player2 !== "boolean") updates.player2 = null;
@@ -52,7 +58,7 @@ if (!battleCode) {
           roomRef.update(updates);
         }
 
-        // Assign a player
+        // Assign player
         if (!roomData.player1) {
           const playerRef = roomRef.child("player1");
           playerRef.onDisconnect().remove();
