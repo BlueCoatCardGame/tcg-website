@@ -97,61 +97,84 @@
   </div>
 
   <!-- Tab Contents -->
+
+  <!-- ALL - 72 cards -->
   <div id="all" class="tab-content active">
     <div class="card-grid">
-      <!-- 72 Card Slots for All -->
-      <!-- You can paste this block 72 times -->
-      <!-- Just showing a few, copy-paste more as needed -->
-      <!-- Use an HTML generator if needed to speed this up -->
-      <!-- Start -->
-      <div><div class="card-slot"></div><div class="card-label">Card 1</div></div>
-      <div><div class="card-slot"></div><div class="card-label">Card 2</div></div>
-      <div><div class="card-slot"></div><div class="card-label">Card 3</div></div>
-      <!-- Copy and paste more... up to Card 72 -->
-      <!-- End -->
+      <!-- Cards 1 to 72 -->
+      ${Array.from({ length: 72 }, (_, i) => `
+      <div>
+        <div class="card-slot"></div>
+        <div class="card-label">Card ${i + 1}</div>
+      </div>
+      `).join('')}
     </div>
   </div>
 
-  <!-- Repeat this for each category (12 cards each) -->
+  <!-- 12 cards per class -->
   <div id="debuffer" class="tab-content">
     <div class="card-grid">
-      <div><div class="card-slot"></div><div class="card-label">Debuffer 1</div></div>
-      <!-- Repeat to 12 -->
+      ${Array.from({ length: 12 }, (_, i) => `
+      <div>
+        <div class="card-slot"></div>
+        <div class="card-label">Debuffer ${i + 1}</div>
+      </div>
+      `).join('')}
     </div>
   </div>
 
   <div id="mage" class="tab-content">
     <div class="card-grid">
-      <div><div class="card-slot"></div><div class="card-label">Mage 1</div></div>
-      <!-- Repeat to 12 -->
+      ${Array.from({ length: 12 }, (_, i) => `
+      <div>
+        <div class="card-slot"></div>
+        <div class="card-label">Mage ${i + 1}</div>
+      </div>
+      `).join('')}
     </div>
   </div>
 
   <div id="support" class="tab-content">
     <div class="card-grid">
-      <div><div class="card-slot"></div><div class="card-label">Support 1</div></div>
-      <!-- Repeat to 12 -->
+      ${Array.from({ length: 12 }, (_, i) => `
+      <div>
+        <div class="card-slot"></div>
+        <div class="card-label">Support ${i + 1}</div>
+      </div>
+      `).join('')}
     </div>
   </div>
 
   <div id="dps" class="tab-content">
     <div class="card-grid">
-      <div><div class="card-slot"></div><div class="card-label">DPS 1</div></div>
-      <!-- Repeat to 12 -->
+      ${Array.from({ length: 12 }, (_, i) => `
+      <div>
+        <div class="card-slot"></div>
+        <div class="card-label">Dps ${i + 1}</div>
+      </div>
+      `).join('')}
     </div>
   </div>
 
   <div id="spirit" class="tab-content">
     <div class="card-grid">
-      <div><div class="card-slot"></div><div class="card-label">Spirit 1</div></div>
-      <!-- Repeat to 12 -->
+      ${Array.from({ length: 12 }, (_, i) => `
+      <div>
+        <div class="card-slot"></div>
+        <div class="card-label">Spirit ${i + 1}</div>
+      </div>
+      `).join('')}
     </div>
   </div>
 
   <div id="hacker" class="tab-content">
     <div class="card-grid">
-      <div><div class="card-slot"></div><div class="card-label">Hacker 1</div></div>
-      <!-- Repeat to 12 -->
+      ${Array.from({ length: 12 }, (_, i) => `
+      <div>
+        <div class="card-slot"></div>
+        <div class="card-label">Hacker ${i + 1}</div>
+      </div>
+      `).join('')}
     </div>
   </div>
 
