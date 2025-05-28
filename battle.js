@@ -24,6 +24,9 @@ if (!battleCode) {
   const dotsSpan = document.createElement('span');
 
   waitingText.textContent = 'Waiting for opponent';
+  dotsSpan.textContent = ''; // Start with empty dots
+  dotsSpan.style.marginLeft = '4px'; // Ensure spacing between text and dots
+
   waitingMessage.appendChild(waitingText);
   waitingMessage.appendChild(dotsSpan);
   displayElement.appendChild(waitingMessage);
@@ -39,6 +42,7 @@ if (!battleCode) {
   const connectedRef = db.ref(".info/connected");
   const roomRef = db.ref('battles/' + battleCode);
 
+  // Listen for both players to be present
   roomRef.on("value", (snapshot) => {
     const roomData = snapshot.val() || {};
     const p1 = roomData.player1;
@@ -47,8 +51,6 @@ if (!battleCode) {
     if (p1 && p2) {
       waitingText.textContent = 'Both players connected! Starting battle';
       dotsSpan.textContent = '...';
-
-      // Optional: clear interval to stop dots after starting
       clearInterval(dotInterval);
 
       setTimeout(() => {
