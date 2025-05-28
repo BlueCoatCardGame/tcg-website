@@ -1,6 +1,3 @@
-// Firebase must be already initialized in HTML
-const db = firebase.database();
-
 const urlParams = new URLSearchParams(window.location.search);
 const battleCode = urlParams.get('code');
 const displayElement = document.getElementById('battleCodeDisplay');
