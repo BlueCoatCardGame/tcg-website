@@ -22,42 +22,35 @@ if (!battleCode) {
       roomRef.once("value").then((snapshot) => {
         const roomData = snapshot.val() || {};
 
-        // Clean up any ghost players
+        // Clean up any ghost players if found (still do this but don't wait for it to finish)
         const updates = {};
         if (roomData.player1 && typeof roomData.player1 !== "boolean") updates.player1 = null;
         if (roomData.player2 && typeof roomData.player2 !== "boolean") updates.player2 = null;
-
         if (Object.keys(updates).length > 0) {
           roomRef.update(updates);
         }
 
-        // Wait a bit, then check again to assign players
-        setTimeout(() => {
-          roomRef.once("value").then((cleanSnap) => {
-            const cleanData = cleanSnap.val() || {};
+        // Immediately assign player and show message
+        if (!roomData.player1) {
+          displayElement.innerHTML += '<br>You are <strong>Player 1</strong>';
+          console.log("Player 1 has joined.");
 
-            if (!cleanData.player1) {
-              const playerRef = roomRef.child("player1");
-              playerRef.onDisconnect().remove().then(() => {
-                playerRef.set(true).then(() => {
-                  displayElement.innerHTML += '<br>You are <strong>Player 1</strong>';
-                  console.log("Player 1 has joined.");
-                });
-              });
-            } else if (!cleanData.player2) {
-              const playerRef = roomRef.child("player2");
-              playerRef.onDisconnect().remove().then(() => {
-                playerRef.set(true).then(() => {
-                  displayElement.innerHTML += '<br>You are <strong>Player 2</strong>';
-                  console.log("Player 2 has joined.");
-                });
-              });
-            } else {
-              displayElement.innerHTML += '<br><span style="color:red;">This battle already has 2 players.</span>';
-              console.log("Battle is full.");
-            }
-          });
-        }, 500);
+          const playerRef = roomRef.child("player1");
+          playerRef.onDisconnect().remove();
+          playerRef.set(true);
+
+        } else if (!roomData.player2) {
+          displayElement.innerHTML += '<br>You are <strong>Player 2</strong>';
+          console.log("Player 2 has joined.");
+
+          const playerRef = roomRef.child("player2");
+          playerRef.onDisconnect().remove();
+          playerRef.set(true);
+
+        } else {
+          displayElement.innerHTML += '<br><span style="color:red;">This battle already has 2 players.</span>';
+          console.log("Battle is full.");
+        }
       }).catch((error) => {
         console.error("Error reading room data:", error);
         displayElement.innerHTML += '<br><span style="color:red;">Error loading battle data.</span>';
