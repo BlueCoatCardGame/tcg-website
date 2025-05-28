@@ -7,7 +7,24 @@ console.log('battleCode:', battleCode);
 if (!battleCode) {
   displayElement.innerHTML = '<span style="color: red;">No battle code found in URL.</span>';
 } else {
-  displayElement.innerHTML = `Battle code: <strong>${battleCode}</strong>`;
+  displayElement.innerHTML = `Battle code: <strong>${battleCode}</strong><br>Loading match`;
+
+  // Create span for loading dots animation
+  const loadingDotsSpan = document.createElement('span');
+  displayElement.appendChild(loadingDotsSpan);
+
+  // Create container for player status message below loading animation
+  const statusMessage = document.createElement('div');
+  displayElement.appendChild(statusMessage);
+
+  let dotCount = 0;
+  const maxDots = 3;
+
+  // Animate dots every 500ms
+  setInterval(() => {
+    dotCount = (dotCount % maxDots) + 1;
+    loadingDotsSpan.textContent = '.'.repeat(dotCount);
+  }, 500);
 
   const connectedRef = db.ref(".info/connected");
   const roomRef = db.ref('battles/' + battleCode);
@@ -30,30 +47,28 @@ if (!battleCode) {
           roomRef.update(updates);
         }
 
-        // Immediately assign player and show message
+        // Assign player and update status message (do NOT stop animation)
         if (!roomData.player1) {
-          displayElement.innerHTML += '<br>You are <strong>Player 1</strong>';
-          console.log("Player 1 has joined.");
-
           const playerRef = roomRef.child("player1");
           playerRef.onDisconnect().remove();
           playerRef.set(true);
+          statusMessage.innerHTML = 'You are <strong>Player 1</strong>';
+          console.log("Player 1 has joined.");
 
         } else if (!roomData.player2) {
-          displayElement.innerHTML += '<br>You are <strong>Player 2</strong>';
-          console.log("Player 2 has joined.");
-
           const playerRef = roomRef.child("player2");
           playerRef.onDisconnect().remove();
           playerRef.set(true);
+          statusMessage.innerHTML = 'You are <strong>Player 2</strong>';
+          console.log("Player 2 has joined.");
 
         } else {
-          displayElement.innerHTML += '<br><span style="color:red;">This battle already has 2 players.</span>';
+          statusMessage.innerHTML = '<span style="color:red;">This battle already has 2 players.</span>';
           console.log("Battle is full.");
         }
       }).catch((error) => {
         console.error("Error reading room data:", error);
-        displayElement.innerHTML += '<br><span style="color:red;">Error loading battle data.</span>';
+        statusMessage.innerHTML = '<span style="color:red;">Error loading battle data.</span>';
       });
     }
   });
