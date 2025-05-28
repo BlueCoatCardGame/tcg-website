@@ -1,32 +1,36 @@
-// Assume Firebase has been initialized in the HTML
+// Firebase must be already initialized in HTML
 const db = firebase.database();
 
 const urlParams = new URLSearchParams(window.location.search);
 const battleCode = urlParams.get('code');
 const displayElement = document.getElementById('battleCodeDisplay');
-console.log('battleCode:', battleCode);
 
 if (!battleCode) {
   displayElement.innerHTML = '<span style="color: red;">No battle code found in URL.</span>';
 } else {
   displayElement.innerHTML = '';
 
-  // Battle code line
+  // Show battle code
   const codeLine = document.createElement('div');
   codeLine.innerHTML = `Battle code: <strong>${battleCode}</strong>`;
   displayElement.appendChild(codeLine);
 
-  // Player status message
+  // Status line (e.g., Player 1 or Player 2)
   const statusMessage = document.createElement('div');
   displayElement.appendChild(statusMessage);
 
-  // Waiting for opponent message with animated dots
+  // Create waiting message with animated dots
   const waitingMessage = document.createElement('div');
-  waitingMessage.innerHTML = '<span id="waitingText" style="color: orange;">Waiting for opponent</span><span id="dots" style="margin-left: 4px;">.</span>';
-  displayElement.appendChild(waitingMessage);
+  const waitingText = document.createElement('span');
+  const dotsSpan = document.createElement('span');
 
-  const waitingText = document.getElementById('waitingText');
-  const dotsSpan = document.getElementById('dots');
+  waitingText.textContent = 'Waiting for opponent';
+  waitingText.style.color = 'orange';
+  dotsSpan.textContent = '.';
+
+  waitingMessage.appendChild(waitingText);
+  waitingMessage.appendChild(dotsSpan);
+  displayElement.appendChild(waitingMessage);
 
   // Animate dots
   let dotCount = 1;
@@ -38,36 +42,36 @@ if (!battleCode) {
   const connectedRef = db.ref(".info/connected");
   const roomRef = db.ref('battles/' + battleCode);
 
-  // Watch room for both players
   roomRef.on("value", (snapshot) => {
     const roomData = snapshot.val() || {};
     const p1 = roomData.player1;
     const p2 = roomData.player2;
 
     if (p1 && p2) {
-      // Both players joined
-      waitingMessage.innerHTML = '<span style="color: orange;">Both players connected! Starting battle</span><span id="dots">...</span>';
+      waitingText.textContent = 'Both players connected! Starting battle';
+      dotsSpan.textContent = '...';
+      dotsSpan.style.color = 'orange';
+
       clearInterval(dotInterval);
 
       setTimeout(() => {
-        waitingMessage.innerHTML = <strong style="color: lightgreen;">Battle started!</strong>;
+        waitingText.textContent = 'Battle started!';
+        dotsSpan.textContent = '';
+        waitingText.style.color = 'lightgreen';
       }, 3000);
     }
   });
 
-  // Player connection and assignment
   connectedRef.on("value", (snap) => {
     if (snap.val() === true) {
       roomRef.once("value").then((snapshot) => {
         const roomData = snapshot.val() || {};
 
-        // Clean up any ghost player entries
         const updates = {};
         if (roomData.player1 && typeof roomData.player1 !== "boolean") updates.player1 = null;
         if (roomData.player2 && typeof roomData.player2 !== "boolean") updates.player2 = null;
         if (Object.keys(updates).length > 0) roomRef.update(updates);
 
-        // Assign this player
         if (!roomData.player1) {
           const playerRef = roomRef.child("player1");
           playerRef.onDisconnect().remove();
