@@ -34,7 +34,7 @@
     <button id="lockerButton" class="button">Locker</button>
     <button id="shopButton" class="button">Shop</button>
     <button id="indexButton" class="button">Index</button>
-    
+
     <div class="join-battle-box">
       <h2>Join a Battle</h2>
       <input type="text" id="battleCodeInput" placeholder="Enter battle code">
@@ -127,6 +127,7 @@
       document.getElementById('deckButton').onclick = () => window.location.href = 'deck.html';
       document.getElementById('lockerButton').onclick = () => window.location.href = 'locker.html';
       document.getElementById('shopButton').onclick = () => window.location.href = 'shop.html';
+      document.getElementById('indexButton').onclick = () => window.location.href = 'battleindex.html';
       document.getElementById('joinBattleBtn').onclick = () => {
         const code = document.getElementById('battleCodeInput').value.trim();
         if (code) {
