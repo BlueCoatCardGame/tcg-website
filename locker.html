@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Locker</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Tabs */
+    .class-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .class-tab {
+      padding: 10px 16px;
+      background-color: #2e2e2e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .class-tab:hover {
+      background-color: #444;
+    }
+
+    .class-tab.active {
+      background-color: #666;
+    }
+
+    /* Grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px 20px;
+      padding: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .card-slot {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      background-color: #2e2e2e;
+      border: 2px dashed #555;
+      border-radius: 12px;
+      transition: background-color 0.3s;
+    }
+
+    .card-slot:hover {
+      background-color: #3a3a3a;
+      cursor: pointer;
+    }
+
+    .card-label {
+      text-align: center;
+      margin-top: 6px;
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Your Locker</h1>
+
+  <p>This is your locker. You can store and view your collected cards here.</p>
+
+  <!-- Back Button -->
+  <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
+
+  <!-- Class Tabs -->
+  <div class="class-tabs">
+    <button class="class-tab active" data-tab="all">All</button>
+    <button class="class-tab" data-tab="debuffer">Debuffer</button>
+    <button class="class-tab" data-tab="mage">Mage</button>
+    <button class="class-tab" data-tab="support">Support</button>
+    <button class="class-tab" data-tab="dps">Dps</button>
+    <button class="class-tab" data-tab="spirit">Spirit</button>
+    <button class="class-tab" data-tab="hacker">Hacker</button>
+  </div>
+
+  <!-- All Cards (72) -->
+  <div id="all" class="card-grid">
+    <!-- Example card slots -->
+    <!-- You can repeat this 72 times or generate it with JS -->
+    <div><div class="card-slot"></div><div class="card-label">Card 1</div></div>
+    <!-- Add the rest... -->
+  </div>
+
+  <!-- Debuffer Cards (12) -->
+  <div id="debuffer" class="card-grid hidden">
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 1</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 2</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 3</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 4</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 5</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 6</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 7</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 8</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 9</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 10</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 11</div></div>
+    <div><div class="card-slot"></div><div class="card-label">Debuffer 12</div></div>
+  </div>
+
+  <!-- Other tabs (empty placeholders for now) -->
+  <div id="mage" class="card-grid hidden"></div>
+  <div id="support" class="card-grid hidden"></div>
+  <div id="dps" class="card-grid hidden"></div>
+  <div id="spirit" class="card-grid hidden"></div>
+  <div id="hacker" class="card-grid hidden"></div>
+
+  <script>
+    const tabs = document.querySelectorAll('.class-tab');
+    const grids = document.querySelectorAll('.card-grid');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const targetId = tab.getAttribute('data-tab');
+        grids.forEach(grid => {
+          grid.id === targetId ? grid.classList.remove('hidden') : grid.classList.add('hidden');
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
