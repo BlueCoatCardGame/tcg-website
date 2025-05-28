@@ -23,14 +23,46 @@
 
   <!-- Card Pack Grid -->
   <div class="card-pack-grid">
-    <div class="card-slot-container"><div class="card-slot"></div><div class="card-label">Generalist Pack</div></div>
-    <div class="card-slot-container"><div class="card-slot"></div><div class="card-label">Debuffer Pack</div></div>
-    <div class="card-slot-container"><div class="card-slot"></div><div class="card-label">Mage Pack</div></div>
-    <div class="card-slot-container"><div class="card-slot"></div><div class="card-label">Support Pack</div></div>
-    <div class="card-slot-container"><div class="card-slot"></div><div class="card-label">Dps Pack</div></div>
-    <div class="card-slot-container"><div class="card-slot"></div><div class="card-label">Spirit Pack</div></div>
-    <div class="card-slot-container"><div class="card-slot"></div><div class="card-label">Hacker Pack</div></div>
-    <div class="card-slot-container"><div class="card-slot"></div><div class="card-label">Special Pack</div></div>
+    <div class="card-slot-container">
+      <div class="card-slot"></div>
+      <div class="card-label">Generalist Pack - 150 coins</div>
+      <button onclick="buyPack('Generalist', 150)">Buy</button>
+    </div>
+    <div class="card-slot-container">
+      <div class="card-slot"></div>
+      <div class="card-label">Debuffer Pack - 200 coins</div>
+      <button onclick="buyPack('Debuffer', 200)">Buy</button>
+    </div>
+    <div class="card-slot-container">
+      <div class="card-slot"></div>
+      <div class="card-label">Mage Pack - 200 coins</div>
+      <button onclick="buyPack('Mage', 200)">Buy</button>
+    </div>
+    <div class="card-slot-container">
+      <div class="card-slot"></div>
+      <div class="card-label">Support Pack - 200 coins</div>
+      <button onclick="buyPack('Support', 200)">Buy</button>
+    </div>
+    <div class="card-slot-container">
+      <div class="card-slot"></div>
+      <div class="card-label">Dps Pack - 200 coins</div>
+      <button onclick="buyPack('Dps', 200)">Buy</button>
+    </div>
+    <div class="card-slot-container">
+      <div class="card-slot"></div>
+      <div class="card-label">Spirit Pack - 200 coins</div>
+      <button onclick="buyPack('Spirit', 200)">Buy</button>
+    </div>
+    <div class="card-slot-container">
+      <div class="card-slot"></div>
+      <div class="card-label">Hacker Pack - 200 coins</div>
+      <button onclick="buyPack('Hacker', 200)">Buy</button>
+    </div>
+    <div class="card-slot-container">
+      <div class="card-slot"></div>
+      <div class="card-label">Special Pack - 500 coins</div>
+      <button onclick="buyPack('Special', 500)">Buy</button>
+    </div>
   </div>
 
   <div class="extra-content">
@@ -54,19 +86,56 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
+    let currentUserId = null;
+    let currentCoins = 0;
+
     auth.onAuthStateChanged(user => {
       if (user) {
-        const userId = user.uid;
-        const coinsRef = db.ref(`users/${userId}/coins`);
+        currentUserId = user.uid;
+        const coinsRef = db.ref(`users/${currentUserId}/coins`);
         coinsRef.on('value', snapshot => {
-          const coins = snapshot.val() ?? 0;
-          document.getElementById('coinCount').textContent = coins;
+          currentCoins = snapshot.val() ?? 0;
+          document.getElementById('coinCount').textContent = currentCoins;
         });
       } else {
         alert("You must be logged in to view the shop.");
         window.location.href = 'index.html';
       }
     });
+
+    function buyPack(packName, packCost) {
+      if (currentCoins < packCost) {
+        alert("Not enough coins!");
+        return;
+      }
+
+      const userRef = db.ref(`users/${currentUserId}`);
+      userRef.transaction(userData => {
+        if (userData) {
+          if ((userData.coins ?? 0) >= packCost) {
+            userData.coins -= packCost;
+
+            // Create packs array if not exist
+            if (!userData.packs) userData.packs = {};
+
+            // Increment the count of the purchased pack
+            if (!userData.packs[packName]) {
+              userData.packs[packName] = 1;
+            } else {
+              userData.packs[packName]++;
+            }
+
+            return userData;
+          }
+        }
+        return userData;
+      }).then(() => {
+        alert(`You bought a ${packName} Pack!`);
+      }).catch(err => {
+        console.error("Purchase failed:", err);
+        alert("Something went wrong.");
+      });
+    }
   </script>
 </body>
 </html>
