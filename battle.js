@@ -24,6 +24,7 @@ if (!battleCode) {
   waitingText.textContent = 'Waiting for opponent';
   waitingText.style.color = 'orange';
   dotsSpan.textContent = '.';
+  dotsSpan.style.color = 'orange';
 
   waitingMessage.appendChild(waitingText);
   waitingMessage.appendChild(dotsSpan);
