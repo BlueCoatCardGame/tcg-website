@@ -57,7 +57,7 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
-
+    
     // Convert username to fake email for Firebase Auth
     function usernameToEmail(username) {
       return username.trim().toLowerCase() + "@yourgame.com";
