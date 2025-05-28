@@ -12,7 +12,6 @@
 </head>
 <body>
 
-  <!-- Coin display -->
   <div class="coin-display">
     💰 <span id="coinCount">0</span>
   </div>
@@ -71,6 +70,14 @@
     <div style="height: 400px;"></div>
   </div>
 
+  <!-- Pack Opening Modal -->
+  <div id="pack-opening" class="pack-opening hidden">
+    <div class="burst-pack">
+      <img id="pack-image" src="" alt="Pack" class="pack-image">
+      <img id="card-image" src="images/card-placeholder.jpg" alt="Card" class="card-image hidden">
+    </div>
+  </div>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
@@ -114,22 +121,42 @@
         if (userData) {
           if ((userData.coins ?? 0) >= packCost) {
             userData.coins -= packCost;
-            if (!userData.packs) userData.packs = {};
-            if (!userData.packs[packName]) {
-              userData.packs[packName] = 1;
-            } else {
-              userData.packs[packName]++;
-            }
+            userData.packs = userData.packs || {};
+            userData.packs[packName] = (userData.packs[packName] || 0) + 1;
             return userData;
           }
         }
         return userData;
       }).then(() => {
-        alert(`You bought a ${packName} Pack!`);
+        triggerPackOpening(packName);
       }).catch(err => {
         console.error("Purchase failed:", err);
         alert("Something went wrong.");
       });
+    }
+
+    function triggerPackOpening(packName) {
+      const packOpening = document.getElementById('pack-opening');
+      const packImage = document.getElementById('pack-image');
+      const cardImage = document.getElementById('card-image');
+
+      packImage.src = `images/${packName.toLowerCase()} pack.jpg`;
+      cardImage.src = 'images/card-placeholder.jpg';
+
+      packOpening.classList.remove('hidden');
+      packImage.classList.remove('burst-animate');
+      cardImage.classList.add('hidden');
+
+      void packImage.offsetWidth;
+      packImage.classList.add('burst-animate');
+
+      setTimeout(() => {
+        cardImage.classList.remove('hidden');
+      }, 600);
+
+      packOpening.onclick = () => {
+        packOpening.classList.add('hidden');
+      };
     }
   </script>
 </body>
