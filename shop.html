@@ -4,6 +4,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shop</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -20,42 +25,42 @@
     <div class="card-slot-container">
       <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
       <div class="card-label">Generalist Pack - 150 coins</div>
-      <button onclick="buyPack('Generalist', 150)">Buy</button>
+      <button onclick="buyPack('generalist', 150)">Buy</button>
     </div>
     <div class="card-slot-container">
       <img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack">
       <div class="card-label">Debuffer Pack - 200 coins</div>
-      <button onclick="buyPack('Debuffer', 200)">Buy</button>
+      <button onclick="buyPack('debuffer', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
       <img src="images/mage pack.jpg" class="card-image" alt="Mage Pack">
       <div class="card-label">Mage Pack - 200 coins</div>
-      <button onclick="buyPack('Mage', 200)">Buy</button>
+      <button onclick="buyPack('mage', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
       <img src="images/support pack.jpg" class="card-image" alt="Support Pack">
       <div class="card-label">Support Pack - 200 coins</div>
-      <button onclick="buyPack('Support', 200)">Buy</button>
+      <button onclick="buyPack('support', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
       <img src="images/dps pack.jpg" class="card-image" alt="DPS Pack">
       <div class="card-label">DPS Pack - 200 coins</div>
-      <button onclick="buyPack('Dps', 200)">Buy</button>
+      <button onclick="buyPack('dps', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
       <img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack">
       <div class="card-label">Spirit Pack - 200 coins</div>
-      <button onclick="buyPack('Spirit', 200)">Buy</button>
+      <button onclick="buyPack('spirit', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
       <img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack">
       <div class="card-label">Hacker Pack - 200 coins</div>
-      <button onclick="buyPack('Hacker', 200)">Buy</button>
+      <button onclick="buyPack('hacker', 200)">Buy</button>
     </div>
     <div class="card-slot-container">
       <img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack">
       <div class="card-label">Specialist Pack - 500 coins</div>
-      <button onclick="buyPack('Special', 500)">Buy</button>
+      <button onclick="buyPack('specialist', 500)">Buy</button>
     </div>
   </div>
 
@@ -68,15 +73,11 @@
   <!-- Pack Opening Modal -->
   <div id="pack-opening" class="pack-opening hidden">
     <div class="burst-pack">
-      <img id="pack-image" src="" alt="Pack" class="pack-image">
-      <img id="card-image" src="images/card-placeholder.jpg" alt="Card" class="card-image hidden">
+      <img id="pack-image" src="" alt="Pack" class="pack-image" style="cursor:pointer;">
+      <p id="click-prompt" style="color: gold; font-weight: bold; margin-top: 12px; font-size: 1.2rem; user-select: none;"></p>
+      <img id="card-image" src="images/card-placeholder.jpg" alt="Card" class="card-image hidden" style="margin-top: 20px;">
     </div>
   </div>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -139,15 +140,21 @@
       const packOpening = document.getElementById('pack-opening');
       const packImage = document.getElementById('pack-image');
       const cardImage = document.getElementById('card-image');
+      const clickPrompt = document.getElementById('click-prompt');
 
       const formattedName = packName.toLowerCase();
-      const packExt = (formattedName === 'generalist') ? 'png' : 'jpg';
+      let packExt = 'jpg';
+      if (formattedName === 'generalist') {
+        packExt = 'png';
+      }
 
       packImage.src = `images/${formattedName} pack.${packExt}`;
       cardImage.src = 'images/card-placeholder.jpg';
 
       cardImage.classList.add('hidden');
       packImage.style.cursor = 'pointer';
+
+      clickPrompt.textContent = "Click!";
 
       let clicksNeeded = 3;
       let clicksDone = 0;
@@ -165,6 +172,7 @@
           cardImage.classList.remove('hidden');
           packImage.style.cursor = 'default';
           packImage.onclick = null;
+          clickPrompt.textContent = "";
         }
       };
 
@@ -173,6 +181,7 @@
           packOpening.classList.add('hidden');
           packImage.onclick = null;
           packOpening.onclick = null;
+          clickPrompt.textContent = "";
         }
       };
     }
