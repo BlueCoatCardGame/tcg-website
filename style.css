@@ -143,3 +143,34 @@ h1 {
   75%  { transform: rotate(-1deg); }
   100% { transform: rotate(0deg); }
 }
+
+.grid-container {
+  display: grid;
+  grid-template-rows: repeat(9, auto); /* 9 rows */
+  gap: 16px;
+  margin: 40px auto;
+  max-width: 1000px;
+  padding: 0 20px;
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: 1fr 3fr; /* 1/4 and 3/4 split */
+  gap: 16px;
+  background-color: #2b2b2b;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.grid-left {
+  background-color: #3a3a3a;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.grid-right {
+  background-color: #444;
+  padding: 12px;
+  border-radius: 8px;
+}
