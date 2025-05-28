@@ -44,12 +44,17 @@ h1 {
   gap: 8px;
 }
 
+.coin-icon {
+  width: 24px;
+  height: 24px;
+}
+
 .card-pack-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px 12px;
   width: 90%;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 30px auto 0;
   justify-items: center;
 }
@@ -58,43 +63,48 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 140px;
+  width: 180px;
+  height: auto;
 }
 
 .card-image {
   width: 100%;
-  height: 200px;
+  height: auto;
+  aspect-ratio: 9 / 20;
   object-fit: contain;
   border-radius: 12px;
   transition: transform 0.3s ease;
 }
 
 .card-image:hover {
-  transform: scale(1.05);
   animation: subtle-wiggle 0.8s infinite;
+  cursor: pointer;
 }
 
 .card-label {
-  margin-top: 8px;
+  margin-top: 10px;
   font-size: 0.9rem;
   color: #ccc;
   text-align: center;
   line-height: 1.2;
 }
 
-.card-slot-container button {
-  margin-top: 6px;
-  padding: 8px 14px;
-  font-size: 0.8rem;
-  background-color: #444;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.join-battle-box {
+  margin-top: 20px;
+  text-align: center;
 }
 
-.card-slot-container button:hover {
-  background-color: #666;
+.join-battle-box input {
+  padding: 10px;
+  font-size: 16px;
+  width: 200px;
+}
+
+.join-battle-box button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-left: 10px;
+  cursor: pointer;
 }
 
 .extra-content {
@@ -125,11 +135,11 @@ h1 {
   background-color: #ccc;
 }
 
-/* Wiggle animation only on hover */
+/* Hover Wiggle Animation Only (No automatic swaying) */
 @keyframes subtle-wiggle {
-  0%   { transform: scale(1.05) rotate(0deg); }
-  25%  { transform: scale(1.05) rotate(1deg); }
-  50%  { transform: scale(1.05) rotate(0deg); }
-  75%  { transform: scale(1.05) rotate(-1deg); }
-  100% { transform: scale(1.05) rotate(0deg); }
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(1deg); }
+  50%  { transform: rotate(0deg); }
+  75%  { transform: rotate(-1deg); }
+  100% { transform: rotate(0deg); }
 }
