@@ -22,24 +22,36 @@ if (!battleCode) {
   codeLine.innerHTML = `Battle code: <strong>${battleCode}</strong>`;
   displayElement.appendChild(codeLine);
 
-  // Status message (e.g., Player 1, full room, etc.)
+  // Status message (e.g., Player 1, waiting, full room, etc.)
   const statusMessage = document.createElement('div');
   displayElement.appendChild(statusMessage);
 
   const connectedRef = db.ref(".info/connected");
   const roomRef = db.ref('battles/' + battleCode);
 
-  // Debug log room changes
+  // Monitor room state to show waiting/start messages
   roomRef.on("value", (snapshot) => {
-    console.log("Room state changed:", snapshot.val());
+    const data = snapshot.val() || {};
+    const player1Exists = !!data.player1;
+    const player2Exists = !!data.player2;
+
+    if (player1Exists && player2Exists) {
+      loadingMessage.innerHTML = '<span style="color: lightgreen;">Both players connected! Starting battle...</span>';
+      setTimeout(() => {
+        startBattle();
+      }, 1000);
+    } else {
+      loadingMessage.innerHTML = '<span style="color: orange;">Waiting for opponent<span id="dots"></span></span>';
+    }
   });
 
+  // Assign player on connect
   connectedRef.on("value", (snap) => {
     if (snap.val() === true) {
       roomRef.once("value").then((snapshot) => {
         const roomData = snapshot.val() || {};
 
-        // Clean ghost players
+        // Clean up ghost players
         const updates = {};
         if (roomData.player1 && typeof roomData.player1 !== "boolean") updates.player1 = null;
         if (roomData.player2 && typeof roomData.player2 !== "boolean") updates.player2 = null;
@@ -47,7 +59,7 @@ if (!battleCode) {
           roomRef.update(updates);
         }
 
-        // Assign player
+        // Assign a player
         if (!roomData.player1) {
           const playerRef = roomRef.child("player1");
           playerRef.onDisconnect().remove();
@@ -68,6 +80,15 @@ if (!battleCode) {
         console.error("Error reading room data:", error);
         statusMessage.innerHTML = '<span style="color:red;">Error loading battle data.</span>';
       });
-    }
-  });
+    }
+  });
+}
+
+// Placeholder for future game logic
+function startBattle() {
+  const status = document.getElementById('loadingMessage');
+  if (status) {
+    status.innerHTML = '<strong>Battle started!</strong>';
+  }
+  console.log("Battle started!");
 }
