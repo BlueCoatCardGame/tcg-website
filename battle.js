@@ -7,23 +7,28 @@ console.log('battleCode:', battleCode);
 if (!battleCode) {
   displayElement.innerHTML = '<span style="color: red;">No battle code found in URL.</span>';
 } else {
-  displayElement.innerHTML = `Battle code: <strong>${battleCode}</strong><br>Loading match`;
+  // Set up loading message with animated dots
+  const loadingText = document.createElement('div');
+  const loadingPrefix = document.createElement('span');
+  const loadingDots = document.createElement('span');
 
-  // Create span for loading dots animation
-  const loadingDotsSpan = document.createElement('span');
-  displayElement.appendChild(loadingDotsSpan);
+  loadingPrefix.textContent = 'Loading match';
+  loadingText.appendChild(loadingPrefix);
+  loadingText.appendChild(loadingDots);
 
-  // Create container for player status message below loading animation
+  displayElement.innerHTML = `Battle code: <strong>${battleCode}</strong><br>`;
+  displayElement.appendChild(loadingText);
+
+  // Add container for status message (e.g., Player 1, full match)
   const statusMessage = document.createElement('div');
   displayElement.appendChild(statusMessage);
 
+  // Animate loading dots
   let dotCount = 0;
   const maxDots = 3;
-
-  // Animate dots every 500ms
   setInterval(() => {
     dotCount = (dotCount % maxDots) + 1;
-    loadingDotsSpan.textContent = '.'.repeat(dotCount);
+    loadingDots.textContent = '.'.repeat(dotCount);
   }, 500);
 
   const connectedRef = db.ref(".info/connected");
@@ -39,7 +44,7 @@ if (!battleCode) {
       roomRef.once("value").then((snapshot) => {
         const roomData = snapshot.val() || {};
 
-        // Clean up any ghost players if found (still do this but don't wait for it to finish)
+        // Clean up ghost players
         const updates = {};
         if (roomData.player1 && typeof roomData.player1 !== "boolean") updates.player1 = null;
         if (roomData.player2 && typeof roomData.player2 !== "boolean") updates.player2 = null;
@@ -47,21 +52,19 @@ if (!battleCode) {
           roomRef.update(updates);
         }
 
-        // Assign player and update status message (do NOT stop animation)
+        // Assign a player
         if (!roomData.player1) {
           const playerRef = roomRef.child("player1");
           playerRef.onDisconnect().remove();
           playerRef.set(true);
           statusMessage.innerHTML = 'You are <strong>Player 1</strong>';
           console.log("Player 1 has joined.");
-
         } else if (!roomData.player2) {
           const playerRef = roomRef.child("player2");
           playerRef.onDisconnect().remove();
           playerRef.set(true);
           statusMessage.innerHTML = 'You are <strong>Player 2</strong>';
           console.log("Player 2 has joined.");
-
         } else {
           statusMessage.innerHTML = '<span style="color:red;">This battle already has 2 players.</span>';
           console.log("Battle is full.");
