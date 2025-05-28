@@ -8,7 +8,6 @@ const displayElement = document.getElementById('battleCodeDisplay');
 if (battleCode) {
   displayElement.innerHTML = `Battle code: <strong>${battleCode}</strong>`;
 
-  // Use the db variable you defined in your HTML Firebase init instead of firebase.database()
   const roomRef = db.ref('battles/' + battleCode);
 
   roomRef.once('value')
@@ -16,24 +15,30 @@ if (battleCode) {
       const roomData = snapshot.val();
 
       if (!roomData) {
-        // No room yet — this is Player 1
+        // This is Player 1
         roomRef.set({
           player1: true
         }).then(() => {
           displayElement.innerHTML += `<br>You are <strong>Player 1</strong>`;
           console.log("Player 1 has joined.");
+
+          // Remove player1 if they disconnect
+          roomRef.child('player1').onDisconnect().remove();
         });
       } else if (!roomData.player2) {
-        // Room exists but player2 slot is free — this is Player 2
+        // This is Player 2
         roomRef.update({
           player2: true
         }).then(() => {
           displayElement.innerHTML += `<br>You are <strong>Player 2</strong>`;
           console.log("Player 2 has joined.");
+
+          // Remove player2 if they disconnect
+          roomRef.child('player2').onDisconnect().remove();
         });
       } else {
-        // Both players already joined
-        displayElement.innerHTML += `<br><span style="color:red;">This battle already has 2 players.</span>`;
+        // Room is full
+        displayElement.innerHTML += `<br><span style="color:red;">This battle already has 2 players. Try another code.</span>`;
         console.log("Battle is full.");
       }
     })
