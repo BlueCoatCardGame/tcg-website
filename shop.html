@@ -140,25 +140,48 @@ function triggerPackOpening(packName) {
   const packImage = document.getElementById('pack-image');
   const cardImage = document.getElementById('card-image');
 
-  // Fix: Use correct file extensions per known pack images
+  // Fix pack image extension issues explicitly
   const formattedName = packName.toLowerCase();
-  const fileExtension = (formattedName === 'generalist') ? 'png' : 'jpg';
-  packImage.src = `images/${formattedName} pack.${fileExtension}`;
+  const packExt = (formattedName === 'generalist') ? 'png' : 'jpg';
+  
+  // We'll simulate 3 stages of the pack opening by toggling CSS classes or changing opacity
+  // For now, just keep the same pack image for simplicity
+  packImage.src = `images/${formattedName} pack.${packExt}`;
   cardImage.src = 'images/card-placeholder.jpg';
+  
+  // Reset UI
+  cardImage.classList.add('hidden');
+  packImage.style.cursor = 'pointer';
+
+  let clicksNeeded = 3;
+  let clicksDone = 0;
 
   packOpening.classList.remove('hidden');
-  packImage.classList.remove('burst-animate');
-  cardImage.classList.add('hidden');
 
-  void packImage.offsetWidth;
-  packImage.classList.add('burst-animate');
+  // Remove any previous click handler to avoid stacking
+  packImage.onclick = () => {
+    clicksDone++;
+    if (clicksDone < clicksNeeded) {
+      // Optional: Add some subtle feedback on each click
+      packImage.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        packImage.style.transform = 'scale(1)';
+      }, 150);
+    } else {
+      // Reveal the card image on last click
+      cardImage.classList.remove('hidden');
+      packImage.style.cursor = 'default';
+      packImage.onclick = null;  // disable further clicks
+    }
+  };
 
-  // Delay to build suspense before revealing card
-  setTimeout(() => {
-    cardImage.classList.remove('hidden');
-  }, 1200);
-
-  packOpening.onclick = () => {
-    packOpening.classList.add('hidden');
+  // Close modal on clicking outside the images
+  packOpening.onclick = (e) => {
+    if (e.target === packOpening) {
+      packOpening.classList.add('hidden');
+      // Clean up click handlers
+      packImage.onclick = null;
+      packOpening.onclick = null;
+    }
   };
 }
