@@ -6,6 +6,7 @@
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
   <h1>Welcome to the TCG Game Hub</h1>
@@ -55,6 +56,7 @@
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.database();
 
     // Convert username to fake email for Firebase Auth
     function usernameToEmail(username) {
@@ -65,7 +67,17 @@
     async function signup(username, password) {
       try {
         const email = usernameToEmail(username);
-        await auth.createUserWithEmailAndPassword(email, password);
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const userId = userCredential.user.uid;
+
+        // Initialize profile with 0 coins and empty deck/cards
+        await db.ref(`users/${userId}`).set({
+          username: username,
+          coins: 0,
+          deck: [],
+          unlockedCards: []
+        });
+
         alert("Signup successful! You can now log in.");
         document.getElementById('signupForm').reset();
       } catch (error) {
@@ -78,7 +90,6 @@
       try {
         const email = usernameToEmail(username);
         await auth.signInWithEmailAndPassword(email, password);
-        // No alert here because onAuthStateChanged will handle UI update
       } catch (error) {
         alert("Login failed: " + error.message);
       }
@@ -89,7 +100,7 @@
       auth.signOut();
     }
 
-    // Handle form submissions
+    // Form handlers
     document.getElementById('signupForm').addEventListener('submit', e => {
       e.preventDefault();
       const username = document.getElementById('signupUsername').value;
@@ -108,34 +119,23 @@
       logout();
     });
 
-    // Enable buttons and join battle logic
     function enableHub() {
       document.getElementById('hubContent').style.display = 'block';
       document.getElementById('authSection').style.display = 'none';
 
-      document.getElementById('deckButton').addEventListener('click', () => {
-        window.location.href = 'deck.html';
-      });
-
-      document.getElementById('shopButton').addEventListener('click', () => {
-        window.location.href = 'shop.html';
-      });
-
-      document.getElementById('lockerButton').addEventListener('click', () => {
-        window.location.href = 'locker.html';
-      });
-
-      document.getElementById('joinBattleBtn').addEventListener('click', () => {
+      document.getElementById('deckButton').onclick = () => window.location.href = 'deck.html';
+      document.getElementById('lockerButton').onclick = () => window.location.href = 'locker.html';
+      document.getElementById('shopButton').onclick = () => window.location.href = 'shop.html';
+      document.getElementById('joinBattleBtn').onclick = () => {
         const code = document.getElementById('battleCodeInput').value.trim();
         if (code) {
           window.location.href = `battle.html?code=${encodeURIComponent(code)}`;
         } else {
           alert("Please enter a battle code.");
         }
-      });
+      };
     }
 
-    // Monitor auth state
     auth.onAuthStateChanged(user => {
       if (user) {
         enableHub();

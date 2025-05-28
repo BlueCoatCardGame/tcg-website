@@ -1,5 +1,3 @@
-// auth.js
-
 // Initialize Firebase App (only if not initialized yet)
 const firebaseConfig = {
   apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
@@ -16,8 +14,9 @@ if (!firebase.apps.length) {
 }
 
 const auth = firebase.auth();
+const db = firebase.database(); // Include Firebase Database
 
-// Helper to convert username to fake email (you can tweak domain)
+// Helper to convert username to fake email
 function usernameToEmail(username) {
   return username.trim().toLowerCase() + "@yourgame.com";
 }
@@ -26,8 +25,19 @@ function usernameToEmail(username) {
 async function signup(username, password) {
   try {
     const email = usernameToEmail(username);
-    await auth.createUserWithEmailAndPassword(email, password);
+    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+    const userId = userCredential.user.uid;
+
+    // Initialize user data
+    await db.ref(`users/${userId}`).set({
+      username: username,
+      coins: 0,
+      deck: [],
+      unlockedCards: []
+    });
+
     alert("Signup successful! You can now log in.");
+    // Optionally redirect: window.location.href = "index.html";
   } catch (error) {
     alert("Signup failed: " + error.message);
   }
@@ -38,9 +48,8 @@ async function login(username, password) {
   try {
     const email = usernameToEmail(username);
     await auth.signInWithEmailAndPassword(email, password);
-    alert("Login successful!");
-    // Redirect to your game hub or reload page, e.g.:
-    window.location.href = "hub.html";
+    // Redirect handled by onAuthStateChanged or UI logic elsewhere
+    // Optionally: window.location.href = "hub.html";
   } catch (error) {
     alert("Login failed: " + error.message);
   }
@@ -54,7 +63,7 @@ function logout() {
   });
 }
 
-// Export functions if using modules (optional)
+// Optional exports if using ES modules
 // window.signup = signup;
 // window.login = login;
 // window.logout = logout;
