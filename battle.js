@@ -1,41 +1,30 @@
 const urlParams = new URLSearchParams(window.location.search);
 const battleCode = urlParams.get('code');
 const displayElement = document.getElementById('battleCodeDisplay');
+const loadingMessage = document.getElementById('loadingMessage');
+const dotsSpan = document.getElementById('dots');
 
 console.log('battleCode:', battleCode);
 
 if (!battleCode) {
   displayElement.innerHTML = '<span style="color: red;">No battle code found in URL.</span>';
 } else {
-  // Clear the display
-  displayElement.innerHTML = '';
+  // Animate loading dots
+  let dotCount = 0;
+  const maxDots = 3;
+  setInterval(() => {
+    dotCount = (dotCount % maxDots) + 1;
+    dotsSpan.textContent = '.'.repeat(dotCount);
+  }, 500);
 
   // Add battle code line
   const codeLine = document.createElement('div');
   codeLine.innerHTML = `Battle code: <strong>${battleCode}</strong>`;
   displayElement.appendChild(codeLine);
 
-  // Animated loading message
-  const loadingLine = document.createElement('div');
-  const loadingPrefix = document.createElement('span');
-  const loadingDots = document.createElement('span');
-
-  loadingPrefix.textContent = 'Loading match';
-  loadingLine.appendChild(loadingPrefix);
-  loadingLine.appendChild(loadingDots);
-  displayElement.appendChild(loadingLine);
-
   // Status message (e.g., Player 1, full room, etc.)
   const statusMessage = document.createElement('div');
   displayElement.appendChild(statusMessage);
-
-  // Animate dots: ".", "..", "..." loop
-  let dotCount = 0;
-  const maxDots = 3;
-  setInterval(() => {
-    dotCount = (dotCount % maxDots) + 1;
-    loadingDots.textContent = '.'.repeat(dotCount);
-  }, 500);
 
   const connectedRef = db.ref(".info/connected");
   const roomRef = db.ref('battles/' + battleCode);
