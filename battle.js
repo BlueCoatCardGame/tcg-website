@@ -6,57 +6,48 @@ console.log('battleCode:', battleCode);
 if (!battleCode) {
   displayElement.innerHTML = '<span style="color: red;">No battle code found in URL.</span>';
 } else {
-  // Clear display area
   displayElement.innerHTML = '';
 
-  // Add battle code line
+  // Battle code line
   const codeLine = document.createElement('div');
   codeLine.innerHTML = `Battle code: <strong>${battleCode}</strong>`;
   displayElement.appendChild(codeLine);
 
-  // Player assignment message
+  // Player status message
   const statusMessage = document.createElement('div');
   displayElement.appendChild(statusMessage);
 
-  // Waiting for opponent message + animated dots
+  // Waiting for opponent message with animated dots
   const waitingMessage = document.createElement('div');
-  const waitingText = document.createElement('span');
-  const dotsSpan = document.createElement('span');
-
-  waitingText.textContent = 'Waiting for opponent';
-  waitingText.style.color = 'orange'; // Set desired orange color
-  dotsSpan.textContent = '';
-  dotsSpan.style.marginLeft = '4px';
-
-  waitingMessage.appendChild(waitingText);
-  waitingMessage.appendChild(dotsSpan);
+  waitingMessage.innerHTML = '<span id="waitingText" style="color: orange;">Waiting for opponent</span><span id="dots" style="margin-left: 4px;">.</span>';
   displayElement.appendChild(waitingMessage);
 
+  const waitingText = document.getElementById('waitingText');
+  const dotsSpan = document.getElementById('dots');
+
   // Animate dots
-  let dotCount = 0;
-  const maxDots = 3;
+  let dotCount = 1;
   const dotInterval = setInterval(() => {
-    dotCount = (dotCount % maxDots) + 1;
+    dotCount = (dotCount % 3) + 1;
     dotsSpan.textContent = '.'.repeat(dotCount);
   }, 500);
 
   const connectedRef = db.ref(".info/connected");
   const roomRef = db.ref('battles/' + battleCode);
 
-  // Listen for both players to be present
   roomRef.on("value", (snapshot) => {
     const roomData = snapshot.val() || {};
     const p1 = roomData.player1;
     const p2 = roomData.player2;
 
     if (p1 && p2) {
-      waitingText.textContent = 'Both players connected! Starting battle';
-      dotsSpan.textContent = '...';
+      // Show connected message, preserve orange color
+      waitingMessage.innerHTML = '<span style="color: orange;">Both players connected! Starting battle</span><span id="dots">...</span>';
       clearInterval(dotInterval);
 
-      // Delay longer (e.g. 3 seconds) before showing "Battle started!"
+      // Delay before showing "Battle started!"
       setTimeout(() => {
-        waitingMessage.innerHTML = '<strong style="color: lightgreen;">Battle started!</strong>';
+        waitingMessage.innerHTML = <strong style="color: lightgreen;">Battle started!</strong>;
       }, 3000);
     }
   });
