@@ -14,13 +14,17 @@ displayElement.innerHTML = `Battle code: <strong>${battleCode}</strong>`;
 const connectedRef = db.ref(".info/connected");
 const roomRef = db.ref('battles/' + battleCode);
 
+// DEBUG: Listen for live room changes
+roomRef.on("value", (snapshot) => {
+  console.log("Room state changed:", snapshot.val());
+});
+
 connectedRef.on("value", (snap) => {
   if (snap.val() === true) {
     roomRef.once("value").then((snapshot) => {
-      const roomData = snapshot.val();
+      const roomData = snapshot.val() || {};
 
-      if (!roomData || !roomData.player1) {
-        // Safely assign Player 1
+      if (!roomData.player1) {
         const playerRef = roomRef.child("player1");
         playerRef.onDisconnect().remove().then(() => {
           playerRef.set(true).then(() => {
@@ -29,7 +33,6 @@ connectedRef.on("value", (snap) => {
           });
         });
       } else if (!roomData.player2) {
-        // Safely assign Player 2
         const playerRef = roomRef.child("player2");
         playerRef.onDisconnect().remove().then(() => {
           playerRef.set(true).then(() => {
