@@ -24,8 +24,9 @@ if (!battleCode) {
   const dotsSpan = document.createElement('span');
 
   waitingText.textContent = 'Waiting for opponent';
-  dotsSpan.textContent = ''; // Start with empty dots
-  dotsSpan.style.marginLeft = '4px'; // Ensure spacing between text and dots
+  waitingText.style.color = 'orange'; // Set desired orange color
+  dotsSpan.textContent = '';
+  dotsSpan.style.marginLeft = '4px';
 
   waitingMessage.appendChild(waitingText);
   waitingMessage.appendChild(dotsSpan);
@@ -53,9 +54,10 @@ if (!battleCode) {
       dotsSpan.textContent = '...';
       clearInterval(dotInterval);
 
+      // Delay longer (e.g. 3 seconds) before showing "Battle started!"
       setTimeout(() => {
-        waitingMessage.innerHTML = '<strong>Battle started!</strong>';
-      }, 1000);
+        waitingMessage.innerHTML = '<strong style="color: lightgreen;">Battle started!</strong>';
+      }, 3000);
     }
   });
 
