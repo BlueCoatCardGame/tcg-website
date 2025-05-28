@@ -1,3 +1,6 @@
+// Assume Firebase has been initialized in the HTML
+const db = firebase.database();
+
 const urlParams = new URLSearchParams(window.location.search);
 const battleCode = urlParams.get('code');
 const displayElement = document.getElementById('battleCodeDisplay');
@@ -35,37 +38,36 @@ if (!battleCode) {
   const connectedRef = db.ref(".info/connected");
   const roomRef = db.ref('battles/' + battleCode);
 
+  // Watch room for both players
   roomRef.on("value", (snapshot) => {
     const roomData = snapshot.val() || {};
     const p1 = roomData.player1;
     const p2 = roomData.player2;
 
     if (p1 && p2) {
-      // Show connected message, preserve orange color
+      // Both players joined
       waitingMessage.innerHTML = '<span style="color: orange;">Both players connected! Starting battle</span><span id="dots">...</span>';
       clearInterval(dotInterval);
 
-      // Delay before showing "Battle started!"
       setTimeout(() => {
         waitingMessage.innerHTML = <strong style="color: lightgreen;">Battle started!</strong>;
       }, 3000);
     }
   });
 
+  // Player connection and assignment
   connectedRef.on("value", (snap) => {
     if (snap.val() === true) {
       roomRef.once("value").then((snapshot) => {
         const roomData = snapshot.val() || {};
 
-        // Clean ghost players
+        // Clean up any ghost player entries
         const updates = {};
         if (roomData.player1 && typeof roomData.player1 !== "boolean") updates.player1 = null;
         if (roomData.player2 && typeof roomData.player2 !== "boolean") updates.player2 = null;
-        if (Object.keys(updates).length > 0) {
-          roomRef.update(updates);
-        }
+        if (Object.keys(updates).length > 0) roomRef.update(updates);
 
-        // Assign player
+        // Assign this player
         if (!roomData.player1) {
           const playerRef = roomRef.child("player1");
           playerRef.onDisconnect().remove();
