@@ -408,3 +408,19 @@ h1 {
   animation: rainbow-glow 2s infinite;
   border-radius: 12px;
 }
+.glowing-pack {
+  animation: rainbow-glow 1.2s infinite alternate;
+}
+
+@keyframes rainbow-glow {
+  0% { box-shadow: 0 0 12px red; }
+  25% { box-shadow: 0 0 12px orange; }
+  50% { box-shadow: 0 0 12px yellow; }
+  75% { box-shadow: 0 0 12px green; }
+  100% { box-shadow: 0 0 12px blue; }
+}
+
+.revealed-card.rarity-godly {
+  box-shadow: 0 0 20px 5px red;
+  border: 2px solid red;
+}

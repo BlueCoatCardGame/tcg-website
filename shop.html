@@ -66,7 +66,7 @@
     <div class="burst-pack">
       <img id="pack-image" class="pack-image" src="" alt="Pack">
       <p id="click-prompt" class="click-prompt">Click!</p>
-      <img id="card-image" class="revealed-card hidden" style="display: none;" alt="Card">
+      <img id="card-image" class="revealed-card hidden" src="" alt="Card">
     </div>
   </div>
 
@@ -91,7 +91,7 @@
       currentUserId = user.uid;
       db.ref(`users/${currentUserId}/coins`)
         .on('value', snap => {
-          currentCoins = snap.val() || 0;
+          currentCoins = snap.val()||0;
           document.getElementById('coinCount').textContent = currentCoins;
         });
     });
@@ -100,27 +100,32 @@
       if (currentCoins < cost) return alert("Not enough coins!");
       const uref = db.ref(`users/${currentUserId}`);
       uref.transaction(u => {
-        if (!u || (u.coins || 0) < cost) return u;
+        if (!u || (u.coins||0) < cost) return u;
         u.coins -= cost;
-        u.packs = u.packs || {};
-        u.packs[name] = (u.packs[name] || 0) + 1;
+        u.packs = u.packs||{};
+        u.packs[name] = (u.packs[name]||0) + 1;
         return u;
       }).then(() => triggerPackOpening(name));
     }
 
-    function getRandomCardFromGeneralist() {
+    function getRandomCardFromSpecialist() {
       const rand = Math.random() * 100;
-      const rarity = rand < 85 ? 'common' :
-                     rand < 95 ? 'rare' :
-                     rand < 99 ? 'epic' :
-                                 'legendary';
-      let n;
-      if (rarity === 'common')     n = Math.floor(Math.random() * 43) + 1;
-      else if (rarity === 'rare')  n = Math.floor(Math.random() * 6) + 44;
-      else if (rarity === 'epic')  n = Math.floor(Math.random() * 6) + 50;
-      else                         n = Math.floor(Math.random() * 6) + 56;
+      let rarity, n;
+
+      if (rand < 75) rarity = 'common';
+      else if (rand < 90) rarity = 'rare';
+      else if (rand < 96) rarity = 'epic';
+      else if (rand < 99.5) rarity = 'legendary';
+      else rarity = 'godly';
+
+      if (rarity === 'common')     n = Math.floor(Math.random()*43)+1;
+      else if (rarity === 'rare')  n = Math.floor(Math.random()*6)+44;
+      else if (rarity === 'epic')  n = Math.floor(Math.random()*6)+50;
+      else if (rarity === 'legendary') n = Math.floor(Math.random()*6)+56;
+      else                          n = Math.floor(Math.random()*3)+62;
+
       return {
-        path: `images/card-${String(n).padStart(3, '0')}.PNG`,
+        path: `images/card-${String(n).padStart(3,'0')}.PNG`,
         rarity
       };
     }
@@ -130,50 +135,48 @@
       const imgPack = document.getElementById('pack-image');
       const imgCard = document.getElementById('card-image');
       const prompt  = document.getElementById('click-prompt');
-      const ext     = name === 'generalist' ? 'png' : 'jpg';
+      const ext     = name==='generalist'? 'png':'jpg';
 
-      // RESET state
       imgCard.className = 'revealed-card hidden';
       imgCard.src = '';
-      imgCard.style.display = 'none';
       prompt.textContent = 'Click!';
       imgPack.classList.remove('glowing-pack');
 
-      // Get draw
-      let draw = { path: 'images/card-placeholder.jpg', rarity: 'common' };
-      if (name === 'generalist') draw = getRandomCardFromGeneralist();
+      let draw = { path:'images/card-placeholder.jpg', rarity:'common' };
+      if (name==='generalist') {
+        draw = getRandomCardFromGeneralist();
+      } else if (name === 'specialist') {
+        draw = getRandomCardFromSpecialist();
+      }
 
-      // Show modal
       modal.classList.remove('hidden');
       imgPack.src = `images/${name} pack.${ext}`;
 
-      const isGlowing = ['rare', 'epic', 'legendary'].includes(draw.rarity);
+      const isGlowing = ['rare','epic','legendary','godly'].includes(draw.rarity);
       if (isGlowing) imgPack.classList.add('glowing-pack');
       const maxClicks = isGlowing ? 5 : 3;
 
-      let clicks = 0, opened = false;
+      let clicks=0, opened=false;
 
       imgPack.onclick = () => {
         if (opened) return;
         clicks++;
-        imgPack.style.transform = 'scale(1.1)';
-        setTimeout(() => imgPack.style.transform = 'scale(1)', 150);
-        if (clicks >= maxClicks) {
+        imgPack.style.transform='scale(1.1)';
+        setTimeout(()=> imgPack.style.transform='scale(1)',150);
+        if (clicks>=maxClicks) {
           opened = true;
           imgCard.src = draw.path;
-          imgCard.style.display = 'block';
           imgCard.classList.remove('hidden');
-          imgCard.classList.add(`rarity-${draw.rarity}`);
-          prompt.textContent = draw.rarity !== 'common'
-            ? `\u2728 ${draw.rarity.toUpperCase()}! \u2728` : '';
+          imgCard.classList.add('rarity-' + draw.rarity);
+          prompt.textContent = draw.rarity!=='common'
+            ? `✨ ${draw.rarity.toUpperCase()}! ✨` : '';
         }
       };
 
       modal.onclick = e => {
-        if (opened && e.target === modal) {
+        if (opened && e.target===modal) {
           modal.classList.add('hidden');
           imgPack.onclick = null;
-          imgCard.style.display = 'none';
         }
       };
     }
