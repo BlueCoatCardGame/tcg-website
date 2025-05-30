@@ -20,62 +20,21 @@
 
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
 
-  <!-- Card Pack Grid -->
   <div class="card-pack-grid">
     <div class="card-slot-container">
       <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
       <div class="card-label">Generalist Pack - 150 coins</div>
       <button onclick="buyPack('generalist', 150)">Buy</button>
     </div>
-    <div class="card-slot-container">
-      <img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack">
-      <div class="card-label">Debuffer Pack - 200 coins</div>
-      <button onclick="buyPack('debuffer', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/mage pack.jpg" class="card-image" alt="Mage Pack">
-      <div class="card-label">Mage Pack - 200 coins</div>
-      <button onclick="buyPack('mage', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/support pack.jpg" class="card-image" alt="Support Pack">
-      <div class="card-label">Support Pack - 200 coins</div>
-      <button onclick="buyPack('support', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/dps pack.jpg" class="card-image" alt="DPS Pack">
-      <div class="card-label">DPS Pack - 200 coins</div>
-      <button onclick="buyPack('dps', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack">
-      <div class="card-label">Spirit Pack - 200 coins</div>
-      <button onclick="buyPack('spirit', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack">
-      <div class="card-label">Hacker Pack - 200 coins</div>
-      <button onclick="buyPack('hacker', 200)">Buy</button>
-    </div>
-    <div class="card-slot-container">
-      <img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack">
-      <div class="card-label">Specialist Pack - 500 coins</div>
-      <button onclick="buyPack('specialist', 500)">Buy</button>
-    </div>
-  </div>
-
-  <div class="extra-content">
-    <h2>More Coming Soon...or is it?</h2>
-    <p>Stay tuned for exclusive card packs and special offers.</p>
-    <div style="height: 400px;"></div>
+    <!-- Add more pack slots as needed -->
   </div>
 
   <!-- Pack Opening Modal -->
-  <div id="pack-opening" class="pack-opening hidden" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; background: #222; padding: 20px; border-radius: 12px; box-shadow: 0 0 15px gold;">
-    <div class="burst-pack" style="text-align:center;">
-      <img id="pack-image" src="" alt="Pack" class="pack-image" style="cursor:pointer; max-width: 220px;">
-      <p id="click-prompt" style="color: gold; font-weight: bold; margin-top: 12px; font-size: 1.2rem; user-select: none;"></p>
-      <img id="card-image" src="images/card-placeholder.jpg" alt="Card" class="card-image hidden" style="margin-top: 20px; max-width: 200px;">
+  <div id="pack-opening" class="hidden" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+    <div id="pack-content" style="background: #222; padding: 20px; border-radius: 12px; text-align: center; position: relative;">
+      <img id="pack-image" src="" alt="Pack" style="max-width: 220px; cursor: pointer;">
+      <p id="click-prompt" style="color: gold; font-weight: bold; margin-top: 12px; font-size: 1.2rem;"></p>
+      <img id="card-image" src="images/card-placeholder.jpg" alt="Card" style="margin-top: 20px; max-width: 180px; display: none;">
     </div>
   </div>
 
@@ -138,56 +97,50 @@
 
     function triggerPackOpening(packName) {
       const packOpening = document.getElementById('pack-opening');
+      const packContent = document.getElementById('pack-content');
       const packImage = document.getElementById('pack-image');
       const cardImage = document.getElementById('card-image');
       const clickPrompt = document.getElementById('click-prompt');
 
-      const formattedName = packName.toLowerCase();
-      let packExt = 'jpg';
-      if (formattedName === 'generalist') {
-        packExt = 'png';
-      }
-
-      packImage.src = `images/${formattedName} pack.${packExt}`;
+      let ext = packName === "generalist" ? "png" : "jpg";
+      packImage.src = `images/${packName} pack.${ext}`;
       cardImage.src = 'images/card-placeholder.jpg';
 
-      cardImage.classList.add('hidden');
-      packImage.style.cursor = 'pointer';
-
+      // Reset
+      cardImage.style.display = 'none';
       clickPrompt.textContent = "Click!";
-
-      let clicksNeeded = 3;
-      let clicksDone = 0;
-
+      packImage.style.cursor = 'pointer';
       packOpening.classList.remove('hidden');
 
-      // Reset transform scale
-      packImage.style.transform = 'scale(1)';
+      let clicks = 0;
+      let packOpened = false;
+
+      // Remove any existing click listeners
+      packImage.onclick = null;
+      packOpening.onclick = null;
 
       packImage.onclick = () => {
-        clicksDone++;
-        if (clicksDone < clicksNeeded) {
-          packImage.style.transform = 'scale(1.1)';
-          setTimeout(() => {
-            packImage.style.transform = 'scale(1)';
-          }, 150);
-        } else {
-          cardImage.classList.remove('hidden');
-          packImage.style.cursor = 'default';
-          packImage.onclick = null;
+        clicks++;
+        packImage.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          packImage.style.transform = 'scale(1)';
+        }, 100);
+
+        if (clicks >= 3 && !packOpened) {
+          cardImage.style.display = 'block';
           clickPrompt.textContent = "";
+          packImage.style.cursor = 'default';
+          packOpened = true;
         }
       };
 
       packOpening.onclick = (e) => {
-        if (e.target === packOpening) {
+        if (e.target === packOpening && packOpened) {
           packOpening.classList.add('hidden');
-          packImage.onclick = null;
-          packOpening.onclick = null;
-          clickPrompt.textContent = "";
         }
       };
     }
   </script>
+
 </body>
 </html>
