@@ -369,3 +369,20 @@ h1 {
   visibility: visible;
   opacity: 1;
 }
+/* === Rarity Glow Animations === */
+@keyframes glow-rare {
+  0%,100% { box-shadow:0 0 10px 2px #00f }
+  50%     { box-shadow:0 0 20px 5px #00f }
+}
+@keyframes glow-epic {
+  0%,100% { box-shadow:0 0 10px 2px #800080 }
+  50%     { box-shadow:0 0 20px 5px #c71585 }
+}
+@keyframes glow-legendary {
+  0%,100% { box-shadow:0 0 12px 3px #FFD700 }
+  50%     { box-shadow:0 0 24px 6px #FFA500 }
+}
+
+.rarity-rare      { animation: glow-rare      1.5s infinite; border-radius: 12px; }
+.rarity-epic      { animation: glow-epic      1.5s infinite; border-radius: 12px; }
+.rarity-legendary { animation: glow-legendary 1.5s infinite; border-radius: 12px; }
