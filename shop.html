@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta charset="UTF-8" />
   <title>Shop</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -16,29 +15,36 @@
   </div>
 
   <h1>Welcome to the Shop!</h1>
+
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
 
   <div class="card-pack-grid">
-    <!-- Loop through packs if needed for cleaner structure in the future -->
+    <!-- All Pack Entries -->
     <div class="card-slot-container">
       <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
       <div class="card-label">Generalist Pack - 150 coins</div>
       <button onclick="buyPack('generalist', 150)">Buy</button>
     </div>
-    <!-- Add similar divs for other packs... -->
-    <!-- Kept all other pack entries same for brevity -->
+    <div class="card-slot-container"><img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack"><div class="card-label">Debuffer Pack - 200 coins</div><button onclick="buyPack('debuffer', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/mage pack.jpg" class="card-image" alt="Mage Pack"><div class="card-label">Mage Pack - 200 coins</div><button onclick="buyPack('mage', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/support pack.jpg" class="card-image" alt="Support Pack"><div class="card-label">Support Pack - 200 coins</div><button onclick="buyPack('support', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/dps pack.jpg" class="card-image" alt="DPS Pack"><div class="card-label">DPS Pack - 200 coins</div><button onclick="buyPack('dps', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack"><div class="card-label">Spirit Pack - 200 coins</div><button onclick="buyPack('spirit', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack"><div class="card-label">Hacker Pack - 200 coins</div><button onclick="buyPack('hacker', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack"><div class="card-label">Specialist Pack - 500 coins</div><button onclick="buyPack('specialist', 500)">Buy</button></div>
   </div>
 
   <!-- Pack Opening Modal -->
-  <div id="pack-opening" class="pack-opening hidden">
-    <div class="burst-pack">
-      <img id="pack-image" src="" alt="Pack" class="pack-image">
-      <p id="click-prompt" class="click-prompt">Click!</p>
-      <img id="card-image" src="" alt="Card" class="card-image" style="display:none;">
+  <div id="pack-opening" style="position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); display:none; justify-content:center; align-items:center; z-index:9999;">
+    <div style="background:#222; padding:20px; border-radius:12px; text-align:center; position:relative;">
+      <img id="pack-image" src="" alt="Pack" style="max-width:220px; cursor:pointer; transition:transform 0.1s">
+      <p id="click-prompt" style="color:gold; font-weight:bold; margin-top:12px; font-size:1.2rem;"></p>
+      <img id="card-image" src="" alt="Card" style="margin-top:20px; max-width:180px; display:none;">
     </div>
   </div>
 
   <script>
+    // Firebase Setup
     const firebaseConfig = {
       apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
       authDomain: "card-game-51dd7.firebaseapp.com",
@@ -52,13 +58,12 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    let currentUserId = null, currentCoins = 0;
-
+    let currentUserId, currentCoins = 0;
     auth.onAuthStateChanged(user => {
       if (!user) return window.location.href = 'index.html';
       currentUserId = user.uid;
       db.ref(`users/${currentUserId}/coins`).on('value', snap => {
-        currentCoins = snap.val() || 0;
+        currentCoins = snap.val()||0;
         document.getElementById('coinCount').textContent = currentCoins;
       });
     });
@@ -66,23 +71,35 @@
     function buyPack(name, cost) {
       if (currentCoins < cost) return alert("Not enough coins!");
       const uref = db.ref(`users/${currentUserId}`);
-      uref.transaction(userData => {
-        if (!userData || (userData.coins || 0) < cost) return userData;
-        userData.coins -= cost;
-        userData.packs = userData.packs || {};
-        userData.packs[name] = (userData.packs[name] || 0) + 1;
-        return userData;
+      uref.transaction(u => {
+        if (!u || (u.coins||0) < cost) return u;
+        u.coins -= cost;
+        u.packs = u.packs||{};
+        u.packs[name] = (u.packs[name]||0) + 1;
+        return u;
       }).then(() => triggerPackOpening(name));
     }
 
     function getRandomCardFromGeneralist() {
       const rand = Math.random() * 100;
       let cardNum;
-      if (rand < 85) cardNum = Math.floor(Math.random() * 43) + 1;
-      else if (rand < 95) cardNum = Math.floor(Math.random() * 6) + 44;
-      else if (rand < 99) cardNum = Math.floor(Math.random() * 6) + 50;
-      else cardNum = Math.floor(Math.random() * 6) + 56;
-      return `images/card-${String(cardNum).padStart(3, '0')}.PNG`;
+
+      if (rand < 85) {
+        // Common 1-43
+        cardNum = Math.floor(Math.random() * 43) + 1;
+      } else if (rand < 95) {
+        // Rare 44-49
+        cardNum = Math.floor(Math.random() * 6) + 44;
+      } else if (rand < 99) {
+        // Epic 50-55
+        cardNum = Math.floor(Math.random() * 6) + 50;
+      } else {
+        // Legendary 56-61
+        cardNum = Math.floor(Math.random() * 6) + 56;
+      }
+
+      const padded = String(cardNum).padStart(3, '0');
+      return `images/card-${padded}.PNG`;
     }
 
     function triggerPackOpening(name) {
@@ -91,15 +108,23 @@
       const imgCard = document.getElementById('card-image');
       const prompt = document.getElementById('click-prompt');
 
+      // Set pack image
       const ext = name === 'generalist' ? 'png' : 'jpg';
       imgPack.src = `images/${name} pack.${ext}`;
+
+      // Reset card & state
       imgCard.style.display = 'none';
       imgCard.src = '';
       prompt.textContent = "Click!";
-      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
 
-      let clicks = 0, opened = false;
-      const finalCard = name === 'generalist' ? getRandomCardFromGeneralist() : 'images/card-placeholder.jpg';
+      let clicks = 0;
+      let opened = false;
+      let finalCard = null;
+
+      if (name === 'generalist') {
+        finalCard = getRandomCardFromGeneralist();
+      }
 
       imgPack.onclick = () => {
         if (opened) return;
@@ -108,7 +133,7 @@
         setTimeout(() => imgPack.style.transform = 'scale(1)', 150);
         if (clicks >= 3) {
           opened = true;
-          imgCard.src = finalCard;
+          imgCard.src = finalCard || 'images/card-placeholder.jpg';
           imgCard.style.display = 'block';
           prompt.textContent = "";
         }
@@ -116,7 +141,7 @@
 
       modal.onclick = e => {
         if (opened && e.target === modal) {
-          modal.classList.add('hidden');
+          modal.style.display = 'none';
           imgPack.onclick = null;
         }
       };
