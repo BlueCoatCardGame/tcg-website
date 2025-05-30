@@ -263,88 +263,15 @@ h1 {
   background-color: #f0f0f0;
 }
 
-.character-popup {
-  display: none;
-  position: absolute;
-  top: 120%; /* below the button */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ffffff;
-  border: 1px solid #ccc;
-  padding: 0.75em;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  white-space: nowrap;
-  z-index: 10;
-}
-
-.applying-character-button:hover .character-popup {
-  display: block;
-}
-
 .apply-button {
-  position: relative; /* Required for positioning the popup */
+  position: relative;
+  overflow: visible;
   padding: 10px 20px;
   background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-}
-
-.character-popup {
-  display: none;
-  position: absolute;
-  top: 100%; /* places it just below the button */
-  left: 0;
-  background-color: #333;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  white-space: nowrap;
-  z-index: 10;
-}
-
-.apply-button:hover .character-popup {
-  display: block;
-}
-
-/* Show popup on button hover */
-.apply-button:hover .character-popup {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Smooth appearance */
-.character-popup {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-/* Popup text hidden by default */
-.character-popup {
-  display: none;
-  position: absolute;
-  background-color: #222;
-  color: white;
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  z-index: 10;
-  white-space: nowrap;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Show popup when hovering over the button */
-.apply-button:hover .character-popup {
-  display: block;
-}
-
-.apply-button {
-  position: relative;
-  overflow: visible;
 }
 
 .character-popup {
@@ -357,17 +284,20 @@ h1 {
   padding: 8px;
   border-radius: 8px;
   position: absolute;
-  top: -50px;
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
   transition: opacity 0.3s ease, visibility 0.3s ease;
   pointer-events: none;
+  white-space: nowrap;
+  font-size: 0.9rem;
 }
 
 .apply-button:hover .character-popup {
   visibility: visible;
   opacity: 1;
+  pointer-events: auto;
 }
 /* === Rarity Glow Animations === */
 @keyframes glow-rare {
@@ -398,32 +328,35 @@ h1 {
 
 @keyframes rainbow-glow {
   0%   { box-shadow: 0 0 12px 2px #ff00ff; }
-  25%  { box-shadow: 0 0 12px 2px #00ffff; }
-  50%  { box-shadow: 0 0 12px 2px #00ff00; }
-  75%  { box-shadow: 0 0 12px 2px #ffff00; }
+  20%  { box-shadow: 0 0 12px 2px #00ffff; }
+  40%  { box-shadow: 0 0 12px 2px #00ff00; }
+  60%  { box-shadow: 0 0 12px 2px #ffff00; }
+  80%  { box-shadow: 0 0 12px 2px #ff0000; }
   100% { box-shadow: 0 0 12px 2px #ff00ff; }
 }
 
 .glowing-pack {
-  animation: rainbow-glow 2s infinite;
-  border-radius: 12px;
-}
-.glowing-pack {
   animation: rainbow-glow 1.2s infinite alternate;
-}
-
-@keyframes rainbow-glow {
-  0% { box-shadow: 0 0 12px red; }
-  25% { box-shadow: 0 0 12px orange; }
-  50% { box-shadow: 0 0 12px yellow; }
-  75% { box-shadow: 0 0 12px green; }
-  100% { box-shadow: 0 0 12px blue; }
+  border-radius: 12px;
 }
 
 .revealed-card.rarity-godly {
   box-shadow: 0 0 20px 5px red;
-  border: 2px solid red;
+  border: 2px solid red;
 }
 .revealed-card.hidden {
-  display: none;
+  display: none;
+}
+.red-glow {
+  animation: redGlow 1s infinite alternate;
+  box-shadow: 0 0 15px 5px red;
+}
+
+@keyframes redGlow {
+  from {
+    box-shadow: 0 0 10px 3px red;
+  }
+  to {
+    box-shadow: 0 0 20px 6px red;
+  }
 }

@@ -145,56 +145,77 @@
       };
     }
 
-    function triggerPackOpening(name) {
-      const modal   = document.getElementById('pack-opening');
-      const imgPack = document.getElementById('pack-image');
-      const imgCard = document.getElementById('card-image');
-      const prompt  = document.getElementById('click-prompt');
-      const ext     = name==='generalist' ? 'png' : 'jpg';
+   function triggerPackOpening(name) {
+  const modal   = document.getElementById('pack-opening');
+  const imgPack = document.getElementById('pack-image');
+  const imgCard = document.getElementById('card-image');
+  const prompt  = document.getElementById('click-prompt');
+  const ext     = name === 'generalist' ? 'png' : 'jpg';
 
-      // Reset card image
-      imgCard.src = '';
-      imgCard.style.display = 'none';
-      imgCard.className = 'revealed-card hidden';
-      prompt.textContent = 'Click!';
-      imgPack.classList.remove('glowing-pack');
+  imgCard.className = 'revealed-card hidden';
+  imgCard.removeAttribute('src');
+  prompt.textContent = 'Click!';
+  imgPack.classList.remove('glowing-pack', 'red-glow');
 
-      let draw = { path: '', rarity: 'common' };
-      if (name === 'generalist') draw = getRandomCardFromGeneralist();
-      else if (name === 'specialist') draw = getRandomCardFromSpecialist();
+  let draw = { path: '', rarity: 'common' };
+  if (name === 'generalist') draw = getRandomCardFromGeneralist();
+  else if (name === 'specialist') draw = getRandomCardFromSpecialist();
 
-      modal.classList.remove('hidden');
-      imgPack.src = `images/${name} pack.${ext}`;
+  modal.classList.remove('hidden');
+  imgPack.src = `images/${name} pack.${ext}`;
 
-      const isGlowing = ['rare','epic','legendary','godly'].includes(draw.rarity);
-      if (isGlowing) imgPack.classList.add('glowing-pack');
-      const maxClicks = isGlowing ? 5 : 3;
+  const isGlowing = ['rare', 'epic', 'legendary', 'godly'].includes(draw.rarity);
+  if (isGlowing) imgPack.classList.add('glowing-pack');
+  const maxClicks = isGlowing ? 5 : 3;
 
-      let clicks = 0, opened = false;
+  let clicks = 0;
+  let phaseTwo = false;  // Tracks if we are in second click phase for godly
+  let opened = false;
 
-      imgPack.onclick = () => {
-        if (opened) return;
-        clicks++;
-        imgPack.style.transform = 'scale(1.1)';
-        setTimeout(() => imgPack.style.transform = 'scale(1)', 150);
-        if (clicks >= maxClicks) {
-          opened = true;
-          imgCard.src = draw.path;
-          imgCard.style.display = 'block';
-          imgCard.classList.remove('hidden');
-          imgCard.classList.add(`rarity-${draw.rarity}`);
-          prompt.textContent = draw.rarity !== 'common'
-            ? `✨ ${draw.rarity.toUpperCase()}! ✨` : '';
-        }
-      };
+  imgPack.onclick = () => {
+    if (opened) return;
 
-      modal.onclick = e => {
-        if (opened && e.target === modal) {
-          modal.classList.add('hidden');
-          imgPack.onclick = null;
-        }
-      };
+    clicks++;
+    imgPack.style.transform = 'scale(1.1)';
+    setTimeout(() => imgPack.style.transform = 'scale(1)', 150);
+
+    // Phase one click limit reached
+    if (!phaseTwo && clicks >= maxClicks) {
+      if (draw.rarity === 'godly') {
+        // Start phase two for godly cards
+        phaseTwo = true;
+        clicks = 0;
+        prompt.textContent = '🔥 Keep Clicking for GODLY! 🔥';
+        imgPack.classList.remove('glowing-pack');
+        imgPack.classList.add('red-glow');
+      } else {
+        // Reveal for other rarities
+        opened = true;
+        imgCard.src = draw.path;
+        imgCard.classList.remove('hidden');
+        imgCard.classList.add(`rarity-${draw.rarity}`);
+        prompt.textContent = draw.rarity !== 'common'
+          ? `✨ ${draw.rarity.toUpperCase()}! ✨` : '';
+      }
     }
+    // Phase two clicks for godly
+    else if (phaseTwo && clicks >= 5) {
+      opened = true;
+      imgCard.src = draw.path;
+      imgCard.classList.remove('hidden');
+      imgCard.classList.add(`rarity-${draw.rarity}`);
+      prompt.textContent = '🔥 GODLY! 🔥';
+      imgPack.classList.remove('red-glow');
+    }
+  };
+
+  modal.onclick = e => {
+    if (opened && e.target === modal) {
+      modal.classList.add('hidden');
+      imgPack.onclick = null;
+    }
+  };
+}
   </script>
 
 </body>
