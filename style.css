@@ -19,7 +19,7 @@ h1 {
   margin: 20px auto;
   padding: 18px;
   font-size: 1.4rem;
-  background-color: #444444;
+  background-color: #444;
   border: none;
   border-radius: 8px;
   color: white;
@@ -32,7 +32,7 @@ h1 {
   background-color: #666;
 }
 
-/* === Coin Display (Used on Other Pages) === */
+/* === Coin Display === */
 .coin-display {
   position: absolute;
   top: 20px;
@@ -48,15 +48,10 @@ h1 {
   gap: 8px;
 }
 
-.coin-icon {
-  width: 24px;
-  height: 24px;
-}
-
-/* === Card Pack Grid (Other Pages) === */
+/* === Card Pack Grid === */
 .card-pack-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 30px 12px;
   width: 90%;
   max-width: 1000px;
@@ -69,21 +64,19 @@ h1 {
   flex-direction: column;
   align-items: center;
   width: 180px;
-  height: auto;
 }
 
 .card-image {
   width: 100%;
-  height: auto;
   aspect-ratio: 9 / 20;
   object-fit: contain;
   border-radius: 12px;
   transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
 .card-image:hover {
   animation: subtle-wiggle 0.8s infinite;
-  cursor: pointer;
 }
 
 .card-label {
@@ -91,108 +84,6 @@ h1 {
   font-size: 0.9rem;
   color: #ccc;
   text-align: center;
-  line-height: 1.2;
-}
-
-/* === Join Battle Box === */
-.join-battle-box {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.join-battle-box input {
-  padding: 10px;
-  font-size: 16px;
-  width: 200px;
-}
-
-.join-battle-box button {
-  padding: 10px 20px;
-  font-size: 16px;
-  margin-left: 10px;
-  cursor: pointer;
-}
-
-/* === Extra Content (Generic Panel) === */
-.extra-content {
-  margin-top: 60px;
-  padding: 20px;
-  background-color: #252525;
-  border-radius: 12px;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  color: #ccc;
-  text-align: center;
-}
-
-/* === Back Button === */
-.back-button {
-  display: block;
-  margin: 30px auto;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #ddd;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.2s;
-}
-
-.back-button:hover {
-  background-color: #ccc;
-}
-
-/* === Wiggle Hover Animation === */
-@keyframes subtle-wiggle {
-  0%   { transform: rotate(0deg); }
-  25%  { transform: rotate(1deg); }
-  50%  { transform: rotate(0deg); }
-  75%  { transform: rotate(-1deg); }
-  100% { transform: rotate(0deg); }
-}
-
-/* === Grid Layout (Field & Status Effects) === */
-.grid-container {
-  display: grid;
-  grid-template-rows: repeat(auto-fit, auto);
-  gap: 16px;
-  margin: 40px auto;
-  max-width: 1000px;
-  padding: 0 20px;
-}
-
-.grid-row {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  gap: 16px;
-  background-color: #2b2b2b;
-  padding: 16px;
-  border-radius: 12px;
-}
-
-.grid-left {
-  background-color: #3a3a3a;
-  padding: 12px;
-  border-radius: 8px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.1rem;
-}
-
-.grid-right {
-  background-color: #444;
-  padding: 12px;
-  border-radius: 8px;
-  text-align: left;
-}
-
-/* === Section Headers (Field Effects, Status Effects) === */
-.section-title {
-  font-size: 2.5rem;
-  margin: 60px auto 20px;
-  text-align: center;
-  color: #f0f0f0;
 }
 
 /* === Pack Opening Modal === */
@@ -202,7 +93,7 @@ h1 {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -214,29 +105,36 @@ h1 {
 }
 
 .burst-pack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background: #222;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  position: relative;
   animation: popIn 0.5s ease;
 }
 
 .pack-image {
-  width: 280px;
-  max-width: 90%;
-  transition: transform 0.3s ease;
+  max-width: 220px;
   cursor: pointer;
+  transition: transform 0.1s;
 }
 
 #card-image {
-  width: 240px;
-  max-width: 85%;
   margin-top: 20px;
-  border-radius: 12px;
-  transition: transform 0.3s ease;
-  cursor: default;
+  max-width: 180px;
+  display: none;
+  border-radius: 8px;
 }
 
-/* Optional: popIn animation */
+/* === Wiggle Hover Animation === */
+@keyframes subtle-wiggle {
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(1deg); }
+  50%  { transform: rotate(0deg); }
+  75%  { transform: rotate(-1deg); }
+  100% { transform: rotate(0deg); }
+}
+
 @keyframes popIn {
   0% {
     transform: scale(0.8);
@@ -246,126 +144,4 @@ h1 {
     transform: scale(1);
     opacity: 1;
   }
-}
-
-.applying-character-button {
-  border: 2px solid #444;
-  background-color: transparent;
-  color: #222;
-  padding: 0.5em 1em;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  font-family: inherit;
-}
-
-.applying-character-button:hover {
-  background-color: #f0f0f0;
-}
-
-.character-popup {
-  display: none;
-  position: absolute;
-  top: 120%; /* below the button */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ffffff;
-  border: 1px solid #ccc;
-  padding: 0.75em;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  white-space: nowrap;
-  z-index: 10;
-}
-
-.applying-character-button:hover .character-popup {
-  display: block;
-}
-
-.apply-button {
-  position: relative; /* Required for positioning the popup */
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.character-popup {
-  display: none;
-  position: absolute;
-  top: 100%; /* places it just below the button */
-  left: 0;
-  background-color: #333;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  white-space: nowrap;
-  z-index: 10;
-}
-
-.apply-button:hover .character-popup {
-  display: block;
-}
-
-/* Show popup on button hover */
-.apply-button:hover .character-popup {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Smooth appearance */
-.character-popup {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-/* Popup text hidden by default */
-.character-popup {
-  display: none;
-  position: absolute;
-  background-color: #222;
-  color: white;
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  z-index: 10;
-  white-space: nowrap;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Show popup when hovering over the button */
-.apply-button:hover .character-popup {
-  display: block;
-}
-
-.apply-button {
-  position: relative;
-  overflow: visible;
-}
-
-.character-popup {
-  visibility: hidden;
-  opacity: 0;
-  width: 220px;
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  padding: 8px;
-  border-radius: 8px;
-  position: absolute;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  pointer-events: none;
-}
-
-.apply-button:hover .character-popup {
-  visibility: visible;
-  opacity: 1;
 }
