@@ -424,3 +424,6 @@ h1 {
   box-shadow: 0 0 20px 5px red;
   border: 2px solid red;
 }
+.revealed-card.hidden {
+  display: none;
+}
