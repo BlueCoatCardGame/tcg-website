@@ -19,49 +19,41 @@
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
 
   <div class="card-pack-grid">
-    <!-- Generalist Pack -->
     <div class="card-slot-container">
       <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
       <div class="card-label">Generalist Pack – 150 coins</div>
       <button onclick="buyPack('generalist',150)">Buy</button>
     </div>
-    <!-- Debuffer Pack -->
     <div class="card-slot-container">
       <img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack">
       <div class="card-label">Debuffer Pack – 200 coins</div>
       <button onclick="buyPack('debuffer',200)">Buy</button>
     </div>
-    <!-- Mage Pack -->
     <div class="card-slot-container">
       <img src="images/mage pack.jpg" class="card-image" alt="Mage Pack">
       <div class="card-label">Mage Pack – 200 coins</div>
       <button onclick="buyPack('mage',200)">Buy</button>
     </div>
-    <!-- Support Pack -->
     <div class="card-slot-container">
       <img src="images/support pack.jpg" class="card-image" alt="Support Pack">
       <div class="card-label">Support Pack – 200 coins</div>
       <button onclick="buyPack('support',200)">Buy</button>
     </div>
-    <!-- DPS Pack -->
     <div class="card-slot-container">
       <img src="images/dps pack.jpg" class="card-image" alt="DPS Pack">
       <div class="card-label">DPS Pack – 200 coins</div>
       <button onclick="buyPack('dps',200)">Buy</button>
     </div>
-    <!-- Spirit Pack -->
     <div class="card-slot-container">
       <img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack">
       <div class="card-label">Spirit Pack – 200 coins</div>
       <button onclick="buyPack('spirit',200)">Buy</button>
     </div>
-    <!-- Hacker Pack -->
     <div class="card-slot-container">
       <img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack">
       <div class="card-label">Hacker Pack – 200 coins</div>
       <button onclick="buyPack('hacker',200)">Buy</button>
     </div>
-    <!-- Specialist Pack -->
     <div class="card-slot-container">
       <img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack">
       <div class="card-label">Specialist Pack – 500 coins</div>
@@ -117,13 +109,20 @@
     }
 
     function getRandomCardFromGeneralist() {
-      const rand = Math.random()*100, r = rand < 85 ? 
-            {n: Math.floor(Math.random()*43)+1, rarity:'common'} :
-        rand < 95 ? {n: Math.floor(Math.random()*6)+44, rarity:'rare'} :
-        rand < 99 ? {n: Math.floor(Math.random()*6)+50, rarity:'epic'} :
-                   {n: Math.floor(Math.random()*6)+56, rarity:'legendary'};
-      const path = `images/card-${String(r.n).padStart(3,'0')}.PNG`;
-      return { path, rarity: r.rarity };
+      const rand = Math.random()*100;
+      const rarity = rand < 85 ? 'common' :
+                     rand < 95 ? 'rare' :
+                     rand < 99 ? 'epic' :
+                                 'legendary';
+      let n;
+      if (rarity === 'common')     n = Math.floor(Math.random()*43)+1;
+      else if (rarity === 'rare')  n = Math.floor(Math.random()*6)+44;
+      else if (rarity === 'epic')  n = Math.floor(Math.random()*6)+50;
+      else                         n = Math.floor(Math.random()*6)+56;
+      return {
+        path: `images/card-${String(n).padStart(3,'0')}.PNG`,
+        rarity
+      };
     }
 
     function triggerPackOpening(name) {
@@ -133,27 +132,33 @@
       const prompt  = document.getElementById('click-prompt');
       const ext     = name==='generalist'? 'png':'jpg';
 
-      // ** RESET old state **
+      // RESET state
       imgCard.className = 'revealed-card hidden';
-      imgCard.src       = '';
-      prompt.textContent= 'Click!';
+      imgCard.src = '';
+      prompt.textContent = 'Click!';
+      imgPack.classList.remove('glowing-pack');
 
-      // ** SHOW modal + pack **
+      // Get draw
+      let draw = { path:'images/card-placeholder.jpg', rarity:'common' };
+      if (name==='generalist') draw = getRandomCardFromGeneralist();
+
+      // Show modal
       modal.classList.remove('hidden');
       imgPack.src = `images/${name} pack.${ext}`;
 
+      const isGlowing = ['rare','epic','legendary'].includes(draw.rarity);
+      if (isGlowing) imgPack.classList.add('glowing-pack');
+      const maxClicks = isGlowing ? 5 : 3;
+
       let clicks=0, opened=false;
-      let draw = { path:'images/card-placeholder.jpg', rarity:'common' };
-      if (name==='generalist') draw = getRandomCardFromGeneralist();
 
       imgPack.onclick = () => {
         if (opened) return;
         clicks++;
         imgPack.style.transform='scale(1.1)';
         setTimeout(()=> imgPack.style.transform='scale(1)',150);
-        if (clicks>=3) {
+        if (clicks>=maxClicks) {
           opened = true;
-          // reveal card + glow
           imgCard.src = draw.path;
           imgCard.classList.remove('hidden');
           imgCard.classList.add(`rarity-${draw.rarity}`);

@@ -386,3 +386,25 @@ h1 {
 .rarity-rare      { animation: glow-rare      1.5s infinite; }
 .rarity-epic      { animation: glow-epic      1.5s infinite; }
 .rarity-legendary { animation: glow-legendary 1.5s infinite; }
+.revealed-card.rarity-rare {
+  box-shadow: 0 0 12px 4px #3b82f6;
+}
+.revealed-card.rarity-epic {
+  box-shadow: 0 0 12px 4px #a855f7;
+}
+.revealed-card.rarity-legendary {
+  box-shadow: 0 0 12px 4px #facc15;
+}
+
+@keyframes rainbow-glow {
+  0%   { box-shadow: 0 0 12px 2px #ff00ff; }
+  25%  { box-shadow: 0 0 12px 2px #00ffff; }
+  50%  { box-shadow: 0 0 12px 2px #00ff00; }
+  75%  { box-shadow: 0 0 12px 2px #ffff00; }
+  100% { box-shadow: 0 0 12px 2px #ff00ff; }
+}
+
+.glowing-pack {
+  animation: rainbow-glow 2s infinite;
+  border-radius: 12px;
+}
