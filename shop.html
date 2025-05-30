@@ -9,34 +9,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-  <style>
-    /* Inline styles to ensure it's loaded even without CSS file fixes */
-    #pack-opening {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-
-    #pack-content {
-      background: #222;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      position: relative;
-    }
-
-    #card-image {
-      margin-top: 20px;
-      max-width: 180px;
-      display: none; /* important fix */
-    }
-  </style>
 </head>
 <body>
 
@@ -49,20 +21,27 @@
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
 
   <div class="card-pack-grid">
+    <!-- Example card slot -->
     <div class="card-slot-container">
       <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
       <div class="card-label">Generalist Pack - 150 coins</div>
       <button onclick="buyPack('generalist', 150)">Buy</button>
     </div>
-    <!-- Add more packs here if needed -->
+    <!-- Repeat for other packs -->
+    <!-- ... (rest of the packs unchanged) -->
+    <div class="card-slot-container">
+      <img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack">
+      <div class="card-label">Specialist Pack - 500 coins</div>
+      <button onclick="buyPack('specialist', 500)">Buy</button>
+    </div>
   </div>
 
   <!-- Pack Opening Modal -->
-  <div id="pack-opening">
-    <div id="pack-content">
-      <img id="pack-image" src="" alt="Pack" style="max-width: 220px; cursor: pointer;">
-      <p id="click-prompt" style="color: gold; font-weight: bold; margin-top: 12px; font-size: 1.2rem;"></p>
-      <img id="card-image" src="images/card-placeholder.jpg" alt="Card">
+  <div id="pack-opening" class="pack-opening hidden">
+    <div class="burst-pack">
+      <img id="pack-image" src="" alt="Pack" class="pack-image" style="cursor:pointer;">
+      <p id="click-prompt" style="color: gold; font-weight: bold; margin-top: 12px; font-size: 1.2rem; user-select: none;"></p>
+      <img id="card-image" src="" alt="Card" class="card-image hidden" style="margin-top: 20px;">
     </div>
   </div>
 
@@ -106,13 +85,11 @@
 
       const userRef = db.ref(`users/${currentUserId}`);
       userRef.transaction(userData => {
-        if (userData) {
-          if ((userData.coins ?? 0) >= packCost) {
-            userData.coins -= packCost;
-            userData.packs = userData.packs || {};
-            userData.packs[packName] = (userData.packs[packName] || 0) + 1;
-            return userData;
-          }
+        if (userData && userData.coins >= packCost) {
+          userData.coins -= packCost;
+          userData.packs = userData.packs || {};
+          userData.packs[packName] = (userData.packs[packName] || 0) + 1;
+          return userData;
         }
         return userData;
       }).then(() => {
@@ -129,43 +106,46 @@
       const cardImage = document.getElementById('card-image');
       const clickPrompt = document.getElementById('click-prompt');
 
-      // Set image paths
-      const ext = packName === "generalist" ? "png" : "jpg";
-      packImage.src = `images/${packName} pack.${ext}`;
-      cardImage.src = "images/card-placeholder.jpg";
+      const formattedName = packName.toLowerCase();
+      let packExt = 'jpg';
+      if (formattedName === 'generalist') packExt = 'png';
 
-      // Reset everything
-      cardImage.style.display = 'none';
+      packImage.src = `images/${formattedName} pack.${packExt}`;
+      cardImage.src = ''; // Don't load the card image yet!
+      cardImage.classList.add('hidden');
       clickPrompt.textContent = "Click!";
       packImage.style.cursor = 'pointer';
-      packOpening.style.display = 'flex';
 
-      let clicks = 0;
+      packOpening.classList.remove('hidden');
+
+      let clicksNeeded = 3;
+      let clicksDone = 0;
       let packOpened = false;
 
-      // Clear previous click events
-      packImage.onclick = null;
-      packOpening.onclick = null;
-
       packImage.onclick = () => {
-        clicks++;
-        packImage.style.transform = 'scale(1.1)';
-        setTimeout(() => {
-          packImage.style.transform = 'scale(1)';
-        }, 100);
-
-        if (clicks >= 3 && !packOpened) {
-          cardImage.style.display = 'block';
+        clicksDone++;
+        if (clicksDone < clicksNeeded) {
+          packImage.style.transform = 'scale(1.1)';
+          setTimeout(() => {
+            packImage.style.transform = 'scale(1)';
+          }, 150);
+        } else if (!packOpened) {
+          cardImage.src = 'images/card-placeholder.jpg'; // NOW load the card
+          cardImage.classList.remove('hidden');
           packImage.style.cursor = 'default';
           clickPrompt.textContent = "";
           packOpened = true;
         }
       };
 
-      // Only allow closing AFTER card is revealed
       packOpening.onclick = (e) => {
         if (e.target === packOpening && packOpened) {
-          packOpening.style.display = 'none';
+          packOpening.classList.add('hidden');
+          packImage.onclick = null;
+          packOpening.onclick = null;
+          clickPrompt.textContent = "";
+          cardImage.src = '';
+          cardImage.classList.add('hidden');
         }
       };
     }
