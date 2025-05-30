@@ -21,14 +21,49 @@
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
 
   <div class="card-pack-grid">
-    <!-- Example card slot -->
+    <!-- Generalist -->
     <div class="card-slot-container">
       <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
       <div class="card-label">Generalist Pack - 150 coins</div>
       <button onclick="buyPack('generalist', 150)">Buy</button>
     </div>
-    <!-- Repeat for other packs -->
-    <!-- ... (rest of the packs unchanged) -->
+    <!-- Debuffer -->
+    <div class="card-slot-container">
+      <img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack">
+      <div class="card-label">Debuffer Pack - 200 coins</div>
+      <button onclick="buyPack('debuffer', 200)">Buy</button>
+    </div>
+    <!-- Mage -->
+    <div class="card-slot-container">
+      <img src="images/mage pack.jpg" class="card-image" alt="Mage Pack">
+      <div class="card-label">Mage Pack - 200 coins</div>
+      <button onclick="buyPack('mage', 200)">Buy</button>
+    </div>
+    <!-- Support -->
+    <div class="card-slot-container">
+      <img src="images/support pack.jpg" class="card-image" alt="Support Pack">
+      <div class="card-label">Support Pack - 200 coins</div>
+      <button onclick="buyPack('support', 200)">Buy</button>
+    </div>
+    <!-- DPS -->
+    <div class="card-slot-container">
+      <img src="images/dps pack.jpg" class="card-image" alt="DPS Pack">
+      <div class="card-label">DPS Pack - 200 coins</div>
+      <button onclick="buyPack('dps', 200)">Buy</button>
+    </div>
+    <!-- Spirit -->
+    <div class="card-slot-container">
+      <img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack">
+      <div class="card-label">Spirit Pack - 200 coins</div>
+      <button onclick="buyPack('spirit', 200)">Buy</button>
+    </div>
+    <!-- Hacker -->
+    <div class="card-slot-container">
+      <img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack">
+      <div class="card-label">Hacker Pack - 200 coins</div>
+      <button onclick="buyPack('hacker', 200)">Buy</button>
+    </div>
+    <!-- Specialist -->
     <div class="card-slot-container">
       <img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack">
       <div class="card-label">Specialist Pack - 500 coins</div>
@@ -37,15 +72,23 @@
   </div>
 
   <!-- Pack Opening Modal -->
-  <div id="pack-opening" class="pack-opening hidden">
-    <div class="burst-pack">
-      <img id="pack-image" src="" alt="Pack" class="pack-image" style="cursor:pointer;">
-      <p id="click-prompt" style="color: gold; font-weight: bold; margin-top: 12px; font-size: 1.2rem; user-select: none;"></p>
-      <img id="card-image" src="" alt="Card" class="card-image hidden" style="margin-top: 20px;">
+  <div id="pack-opening" style="
+      position: fixed; top:0; left:0;
+      width:100vw; height:100vh;
+      background:rgba(0,0,0,0.85);
+      display:none; justify-content:center; align-items:center;
+      z-index:9999;">
+    <div style="
+        background:#222; padding:20px; border-radius:12px;
+        text-align:center; position:relative;">
+      <img id="pack-image" src="" alt="Pack" style="max-width:220px; cursor:pointer; transition:transform 0.1s">
+      <p id="click-prompt" style="color:gold; font-weight:bold; margin-top:12px; font-size:1.2rem;"></p>
+      <img id="card-image" src="" alt="Card" style="margin-top:20px; max-width:180px; display:none;">
     </div>
   </div>
 
   <script>
+    // Firebase init
     const firebaseConfig = {
       apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
       authDomain: "card-game-51dd7.firebaseapp.com",
@@ -55,98 +98,64 @@
       appId: "1:1059333480213:web:9787cdf5da0242aebf531c",
       databaseURL: "https://card-game-51dd7-default-rtdb.firebaseio.com"
     };
-
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
 
-    let currentUserId = null;
-    let currentCoins = 0;
-
+    let currentUserId, currentCoins = 0;
     auth.onAuthStateChanged(user => {
-      if (user) {
-        currentUserId = user.uid;
-        const coinsRef = db.ref(`users/${currentUserId}/coins`);
-        coinsRef.on('value', snapshot => {
-          currentCoins = snapshot.val() ?? 0;
-          document.getElementById('coinCount').textContent = currentCoins;
-        });
-      } else {
-        alert("You must be logged in to view the shop.");
-        window.location.href = 'index.html';
-      }
+      if (!user) return window.location.href = 'index.html';
+      currentUserId = user.uid;
+      db.ref(`users/${currentUserId}/coins`).on('value', snap => {
+        currentCoins = snap.val()||0;
+        document.getElementById('coinCount').textContent = currentCoins;
+      });
     });
 
-    function buyPack(packName, packCost) {
-      if (currentCoins < packCost) {
-        alert("Not enough coins!");
-        return;
-      }
-
-      const userRef = db.ref(`users/${currentUserId}`);
-      userRef.transaction(userData => {
-        if (userData && userData.coins >= packCost) {
-          userData.coins -= packCost;
-          userData.packs = userData.packs || {};
-          userData.packs[packName] = (userData.packs[packName] || 0) + 1;
-          return userData;
-        }
-        return userData;
-      }).then(() => {
-        triggerPackOpening(packName);
-      }).catch(err => {
-        console.error("Purchase failed:", err);
-        alert("Something went wrong.");
-      });
+    function buyPack(name, cost) {
+      if (currentCoins < cost) return alert("Not enough coins!");
+      const uref = db.ref(`users/${currentUserId}`);
+      uref.transaction(u => {
+        if (!u || (u.coins||0) < cost) return u;
+        u.coins -= cost;
+        u.packs = u.packs||{};
+        u.packs[name] = (u.packs[name]||0) + 1;
+        return u;
+      }).then(() => triggerPackOpening(name));
     }
 
-    function triggerPackOpening(packName) {
-      const packOpening = document.getElementById('pack-opening');
-      const packImage = document.getElementById('pack-image');
-      const cardImage = document.getElementById('card-image');
-      const clickPrompt = document.getElementById('click-prompt');
+    function triggerPackOpening(name) {
+      const modal = document.getElementById('pack-opening');
+      const imgPack = document.getElementById('pack-image');
+      const imgCard = document.getElementById('card-image');
+      const prompt = document.getElementById('click-prompt');
 
-      const formattedName = packName.toLowerCase();
-      let packExt = 'jpg';
-      if (formattedName === 'generalist') packExt = 'png';
+      // Set pack image
+      const ext = name==='generalist'? 'png':'jpg';
+      imgPack.src = `images/${name} pack.${ext}`;
 
-      packImage.src = `images/${formattedName} pack.${packExt}`;
-      cardImage.src = ''; // Don't load the card image yet!
-      cardImage.classList.add('hidden');
-      clickPrompt.textContent = "Click!";
-      packImage.style.cursor = 'pointer';
+      // Reset card & state
+      imgCard.style.display = 'none';
+      imgCard.src = '';
+      prompt.textContent = "Click!";
+      modal.style.display = 'flex';
 
-      packOpening.classList.remove('hidden');
-
-      let clicksNeeded = 3;
-      let clicksDone = 0;
-      let packOpened = false;
-
-      packImage.onclick = () => {
-        clicksDone++;
-        if (clicksDone < clicksNeeded) {
-          packImage.style.transform = 'scale(1.1)';
-          setTimeout(() => {
-            packImage.style.transform = 'scale(1)';
-          }, 150);
-        } else if (!packOpened) {
-          cardImage.src = 'images/card-placeholder.jpg'; // NOW load the card
-          cardImage.classList.remove('hidden');
-          packImage.style.cursor = 'default';
-          clickPrompt.textContent = "";
-          packOpened = true;
+      let clicks=0, opened=false;
+      imgPack.onclick = () => {
+        if (opened) return;
+        clicks++;
+        imgPack.style.transform = 'scale(1.1)';
+        setTimeout(()=> imgPack.style.transform='scale(1)',150);
+        if (clicks>=3) {
+          imgCard.src = 'images/card-placeholder.jpg';
+          imgCard.style.display = 'block';
+          prompt.textContent = "";
+          opened = true;
         }
       };
 
-      packOpening.onclick = (e) => {
-        if (e.target === packOpening && packOpened) {
-          packOpening.classList.add('hidden');
-          packImage.onclick = null;
-          packOpening.onclick = null;
-          clickPrompt.textContent = "";
-          cardImage.src = '';
-          cardImage.classList.add('hidden');
-        }
+      modal.onclick = e => {
+        if (opened && e.target===modal) modal.style.display='none';
       };
     }
   </script>
