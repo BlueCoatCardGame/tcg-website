@@ -22,59 +22,59 @@
     <!-- Generalist Pack -->
     <div class="card-slot-container">
       <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
-      <div class="card-label">Generalist Pack - 150 coins</div>
-      <button onclick="buyPack('generalist', 150)">Buy</button>
+      <div class="card-label">Generalist Pack – 150 coins</div>
+      <button onclick="buyPack('generalist',150)">Buy</button>
     </div>
     <!-- Debuffer Pack -->
     <div class="card-slot-container">
       <img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack">
-      <div class="card-label">Debuffer Pack - 200 coins</div>
-      <button onclick="buyPack('debuffer', 200)">Buy</button>
+      <div class="card-label">Debuffer Pack – 200 coins</div>
+      <button onclick="buyPack('debuffer',200)">Buy</button>
     </div>
     <!-- Mage Pack -->
     <div class="card-slot-container">
       <img src="images/mage pack.jpg" class="card-image" alt="Mage Pack">
-      <div class="card-label">Mage Pack - 200 coins</div>
-      <button onclick="buyPack('mage', 200)">Buy</button>
+      <div class="card-label">Mage Pack – 200 coins</div>
+      <button onclick="buyPack('mage',200)">Buy</button>
     </div>
     <!-- Support Pack -->
     <div class="card-slot-container">
       <img src="images/support pack.jpg" class="card-image" alt="Support Pack">
-      <div class="card-label">Support Pack - 200 coins</div>
-      <button onclick="buyPack('support', 200)">Buy</button>
+      <div class="card-label">Support Pack – 200 coins</div>
+      <button onclick="buyPack('support',200)">Buy</button>
     </div>
     <!-- DPS Pack -->
     <div class="card-slot-container">
       <img src="images/dps pack.jpg" class="card-image" alt="DPS Pack">
-      <div class="card-label">DPS Pack - 200 coins</div>
-      <button onclick="buyPack('dps', 200)">Buy</button>
+      <div class="card-label">DPS Pack – 200 coins</div>
+      <button onclick="buyPack('dps',200)">Buy</button>
     </div>
     <!-- Spirit Pack -->
     <div class="card-slot-container">
       <img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack">
-      <div class="card-label">Spirit Pack - 200 coins</div>
-      <button onclick="buyPack('spirit', 200)">Buy</button>
+      <div class="card-label">Spirit Pack – 200 coins</div>
+      <button onclick="buyPack('spirit',200)">Buy</button>
     </div>
     <!-- Hacker Pack -->
     <div class="card-slot-container">
       <img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack">
-      <div class="card-label">Hacker Pack - 200 coins</div>
-      <button onclick="buyPack('hacker', 200)">Buy</button>
+      <div class="card-label">Hacker Pack – 200 coins</div>
+      <button onclick="buyPack('hacker',200)">Buy</button>
     </div>
     <!-- Specialist Pack -->
     <div class="card-slot-container">
       <img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack">
-      <div class="card-label">Specialist Pack - 500 coins</div>
-      <button onclick="buyPack('specialist', 500)">Buy</button>
+      <div class="card-label">Specialist Pack – 500 coins</div>
+      <button onclick="buyPack('specialist',500)">Buy</button>
     </div>
   </div>
 
   <!-- Pack Opening Modal -->
   <div id="pack-opening" class="pack-opening hidden">
     <div class="burst-pack">
-      <img id="pack-image" src="" alt="Pack" class="pack-image">
+      <img id="pack-image" class="pack-image" src="" alt="Pack">
       <p id="click-prompt" class="click-prompt">Click!</p>
-      <img id="card-image" src="" alt="Card" class="revealed-card hidden">
+      <img id="card-image" class="revealed-card hidden" src="" alt="Card">
     </div>
   </div>
 
@@ -97,10 +97,11 @@
     auth.onAuthStateChanged(user => {
       if (!user) return window.location.href = 'index.html';
       currentUserId = user.uid;
-      db.ref(`users/${currentUserId}/coins`).on('value', snap => {
-        currentCoins = snap.val()||0;
-        document.getElementById('coinCount').textContent = currentCoins;
-      });
+      db.ref(`users/${currentUserId}/coins`)
+        .on('value', snap => {
+          currentCoins = snap.val()||0;
+          document.getElementById('coinCount').textContent = currentCoins;
+        });
     });
 
     function buyPack(name, cost) {
@@ -116,25 +117,28 @@
     }
 
     function getRandomCardFromGeneralist() {
-      const rand = Math.random() * 100;
-      let cardNum, rarity;
-      if (rand < 85)        { cardNum = Math.floor(Math.random()*43)+1;   rarity='common'; }
-      else if (rand < 95)   { cardNum = Math.floor(Math.random()*6)+44;    rarity='rare'; }
-      else if (rand < 99)   { cardNum = Math.floor(Math.random()*6)+50;    rarity='epic'; }
-      else                  { cardNum = Math.floor(Math.random()*6)+56;    rarity='legendary'; }
-      return { path: `images/card-${String(cardNum).padStart(3,'0')}.PNG`, rarity };
+      const rand = Math.random()*100, r = rand < 85 ? 
+            {n: Math.floor(Math.random()*43)+1, rarity:'common'} :
+        rand < 95 ? {n: Math.floor(Math.random()*6)+44, rarity:'rare'} :
+        rand < 99 ? {n: Math.floor(Math.random()*6)+50, rarity:'epic'} :
+                   {n: Math.floor(Math.random()*6)+56, rarity:'legendary'};
+      const path = `images/card-${String(r.n).padStart(3,'0')}.PNG`;
+      return { path, rarity: r.rarity };
     }
 
     function triggerPackOpening(name) {
-      const modal      = document.getElementById('pack-opening');
-      const imgPack    = document.getElementById('pack-image');
-      const imgCard    = document.getElementById('card-image');
-      const prompt     = document.getElementById('click-prompt');
-      const ext        = name==='generalist'? 'png':'jpg';
+      const modal   = document.getElementById('pack-opening');
+      const imgPack = document.getElementById('pack-image');
+      const imgCard = document.getElementById('card-image');
+      const prompt  = document.getElementById('click-prompt');
+      const ext     = name==='generalist'? 'png':'jpg';
 
-      // Reset
+      // ** RESET old state **
       imgCard.className = 'revealed-card hidden';
-      prompt.textContent = 'Click!';
+      imgCard.src       = '';
+      prompt.textContent= 'Click!';
+
+      // ** SHOW modal + pack **
       modal.classList.remove('hidden');
       imgPack.src = `images/${name} pack.${ext}`;
 
@@ -146,16 +150,15 @@
         if (opened) return;
         clicks++;
         imgPack.style.transform='scale(1.1)';
-        setTimeout(()=>imgPack.style.transform='scale(1)',150);
+        setTimeout(()=> imgPack.style.transform='scale(1)',150);
         if (clicks>=3) {
-          opened=true;
+          opened = true;
+          // reveal card + glow
           imgCard.src = draw.path;
           imgCard.classList.remove('hidden');
-          // Apply glow based on rarity:
           imgCard.classList.add(`rarity-${draw.rarity}`);
           prompt.textContent = draw.rarity!=='common'
-            ? '\u2728 ' + draw.rarity.toUpperCase() + '! \u2728'
-            : '';
+            ? `✨ ${draw.rarity.toUpperCase()}! ✨` : '';
         }
       };
 
@@ -167,5 +170,6 @@
       };
     }
   </script>
+
 </body>
 </html>
