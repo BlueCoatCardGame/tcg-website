@@ -9,6 +9,34 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <style>
+    /* Inline styles to ensure it's loaded even without CSS file fixes */
+    #pack-opening {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #pack-content {
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      position: relative;
+    }
+
+    #card-image {
+      margin-top: 20px;
+      max-width: 180px;
+      display: none; /* important fix */
+    }
+  </style>
 </head>
 <body>
 
@@ -26,15 +54,15 @@
       <div class="card-label">Generalist Pack - 150 coins</div>
       <button onclick="buyPack('generalist', 150)">Buy</button>
     </div>
-    <!-- Add more pack slots as needed -->
+    <!-- Add more packs here if needed -->
   </div>
 
   <!-- Pack Opening Modal -->
-  <div id="pack-opening" class="hidden" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center;">
-    <div id="pack-content" style="background: #222; padding: 20px; border-radius: 12px; text-align: center; position: relative;">
+  <div id="pack-opening">
+    <div id="pack-content">
       <img id="pack-image" src="" alt="Pack" style="max-width: 220px; cursor: pointer;">
       <p id="click-prompt" style="color: gold; font-weight: bold; margin-top: 12px; font-size: 1.2rem;"></p>
-      <img id="card-image" src="images/card-placeholder.jpg" alt="Card" style="margin-top: 20px; max-width: 180px; display: none;">
+      <img id="card-image" src="images/card-placeholder.jpg" alt="Card">
     </div>
   </div>
 
@@ -97,25 +125,25 @@
 
     function triggerPackOpening(packName) {
       const packOpening = document.getElementById('pack-opening');
-      const packContent = document.getElementById('pack-content');
       const packImage = document.getElementById('pack-image');
       const cardImage = document.getElementById('card-image');
       const clickPrompt = document.getElementById('click-prompt');
 
-      let ext = packName === "generalist" ? "png" : "jpg";
+      // Set image paths
+      const ext = packName === "generalist" ? "png" : "jpg";
       packImage.src = `images/${packName} pack.${ext}`;
-      cardImage.src = 'images/card-placeholder.jpg';
+      cardImage.src = "images/card-placeholder.jpg";
 
-      // Reset
+      // Reset everything
       cardImage.style.display = 'none';
       clickPrompt.textContent = "Click!";
       packImage.style.cursor = 'pointer';
-      packOpening.classList.remove('hidden');
+      packOpening.style.display = 'flex';
 
       let clicks = 0;
       let packOpened = false;
 
-      // Remove any existing click listeners
+      // Clear previous click events
       packImage.onclick = null;
       packOpening.onclick = null;
 
@@ -128,19 +156,19 @@
 
         if (clicks >= 3 && !packOpened) {
           cardImage.style.display = 'block';
-          clickPrompt.textContent = "";
           packImage.style.cursor = 'default';
+          clickPrompt.textContent = "";
           packOpened = true;
         }
       };
 
+      // Only allow closing AFTER card is revealed
       packOpening.onclick = (e) => {
         if (e.target === packOpening && packOpened) {
-          packOpening.classList.add('hidden');
+          packOpening.style.display = 'none';
         }
       };
     }
   </script>
-
 </body>
 </html>
