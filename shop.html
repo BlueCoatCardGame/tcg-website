@@ -66,12 +66,11 @@
     <div class="burst-pack">
       <img id="pack-image" class="pack-image" src="" alt="Pack">
       <p id="click-prompt" class="click-prompt">Click!</p>
-      <img id="card-image" class="revealed-card hidden" src="" alt="Card">
+      <img id="card-image" class="revealed-card hidden" alt="Card">
     </div>
   </div>
 
   <script>
-    // Firebase Setup
     const firebaseConfig = {
       apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
       authDomain: "card-game-51dd7.firebaseapp.com",
@@ -105,25 +104,41 @@
         u.packs = u.packs||{};
         u.packs[name] = (u.packs[name]||0) + 1;
         return u;
-      }).then(() => triggerPackOpening(name));
+      }).then(result => {
+        if (result && result.committed) triggerPackOpening(name);
+      });
+    }
+
+    function getRandomCardFromGeneralist() {
+      const rand = Math.random()*100;
+      const rarity = rand < 85 ? 'common' :
+                     rand < 95 ? 'rare' :
+                     rand < 99 ? 'epic' :
+                                 'legendary';
+      let n;
+      if (rarity === 'common')     n = Math.floor(Math.random()*43)+1;
+      else if (rarity === 'rare')  n = Math.floor(Math.random()*6)+44;
+      else if (rarity === 'epic')  n = Math.floor(Math.random()*6)+50;
+      else                         n = Math.floor(Math.random()*6)+56;
+      return {
+        path: `images/card-${String(n).padStart(3,'0')}.PNG`,
+        rarity
+      };
     }
 
     function getRandomCardFromSpecialist() {
       const rand = Math.random() * 100;
-      let rarity, n;
-
-      if (rand < 75) rarity = 'common';
-      else if (rand < 90) rarity = 'rare';
-      else if (rand < 96) rarity = 'epic';
-      else if (rand < 99.5) rarity = 'legendary';
-      else rarity = 'godly';
-
+      const rarity = rand < 75 ? 'common' :
+                     rand < 90 ? 'rare' :
+                     rand < 96 ? 'epic' :
+                     rand < 99.5 ? 'legendary' :
+                                   'godly';
+      let n;
       if (rarity === 'common')     n = Math.floor(Math.random()*43)+1;
       else if (rarity === 'rare')  n = Math.floor(Math.random()*6)+44;
       else if (rarity === 'epic')  n = Math.floor(Math.random()*6)+50;
       else if (rarity === 'legendary') n = Math.floor(Math.random()*6)+56;
       else                          n = Math.floor(Math.random()*3)+62;
-
       return {
         path: `images/card-${String(n).padStart(3,'0')}.PNG`,
         rarity
@@ -135,19 +150,16 @@
       const imgPack = document.getElementById('pack-image');
       const imgCard = document.getElementById('card-image');
       const prompt  = document.getElementById('click-prompt');
-      const ext     = name==='generalist'? 'png':'jpg';
+      const ext     = name==='generalist' ? 'png' : 'jpg';
 
       imgCard.className = 'revealed-card hidden';
-      imgCard.src = '';
+      imgCard.removeAttribute('src');
       prompt.textContent = 'Click!';
       imgPack.classList.remove('glowing-pack');
 
-      let draw = { path:'images/card-placeholder.jpg', rarity:'common' };
-      if (name==='generalist') {
-        draw = getRandomCardFromGeneralist();
-      } else if (name === 'specialist') {
-        draw = getRandomCardFromSpecialist();
-      }
+      let draw = { path: '', rarity: 'common' };
+      if (name === 'generalist') draw = getRandomCardFromGeneralist();
+      else if (name === 'specialist') draw = getRandomCardFromSpecialist();
 
       modal.classList.remove('hidden');
       imgPack.src = `images/${name} pack.${ext}`;
@@ -156,25 +168,25 @@
       if (isGlowing) imgPack.classList.add('glowing-pack');
       const maxClicks = isGlowing ? 5 : 3;
 
-      let clicks=0, opened=false;
+      let clicks = 0, opened = false;
 
       imgPack.onclick = () => {
         if (opened) return;
         clicks++;
-        imgPack.style.transform='scale(1.1)';
-        setTimeout(()=> imgPack.style.transform='scale(1)',150);
-        if (clicks>=maxClicks) {
+        imgPack.style.transform = 'scale(1.1)';
+        setTimeout(() => imgPack.style.transform = 'scale(1)', 150);
+        if (clicks >= maxClicks) {
           opened = true;
           imgCard.src = draw.path;
           imgCard.classList.remove('hidden');
-          imgCard.classList.add('rarity-' + draw.rarity);
-          prompt.textContent = draw.rarity!=='common'
-            ? `✨ ${draw.rarity.toUpperCase()}! ✨` : '';
+          imgCard.classList.add(`rarity-${draw.rarity}`);
+          prompt.textContent = draw.rarity !== 'common'
+            ? `\u2728 ${draw.rarity.toUpperCase()}! \u2728` : '';
         }
       };
 
       modal.onclick = e => {
-        if (opened && e.target===modal) {
+        if (opened && e.target === modal) {
           modal.classList.add('hidden');
           imgPack.onclick = null;
         }
