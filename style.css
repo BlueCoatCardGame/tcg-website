@@ -281,3 +281,53 @@ h1 {
 .applying-character-button:hover .character-popup {
   display: block;
 }
+
+.apply-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 12px;
+  border: 2px solid #333; /* Outline */
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  position: relative;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Hover effect for the button */
+.apply-button:hover {
+  background-color: #45a049;
+  border-color: #000;
+}
+
+/* Popup container */
+.character-popup {
+  visibility: hidden;
+  width: 220px;
+  background-color: #fff;
+  color: #333;
+  text-align: center;
+  padding: 8px;
+  border-radius: 8px;
+  border: 2px solid #888;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  z-index: 10;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+/* Show popup on button hover */
+.apply-button:hover .character-popup {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Smooth appearance */
+.character-popup {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
