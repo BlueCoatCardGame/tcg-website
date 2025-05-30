@@ -4,8 +4,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shop</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -21,66 +19,24 @@
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
 
   <div class="card-pack-grid">
-    <!-- Generalist -->
+    <!-- All Pack Entries -->
     <div class="card-slot-container">
       <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
       <div class="card-label">Generalist Pack - 150 coins</div>
       <button onclick="buyPack('generalist', 150)">Buy</button>
     </div>
-    <!-- Debuffer -->
-    <div class="card-slot-container">
-      <img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack">
-      <div class="card-label">Debuffer Pack - 200 coins</div>
-      <button onclick="buyPack('debuffer', 200)">Buy</button>
-    </div>
-    <!-- Mage -->
-    <div class="card-slot-container">
-      <img src="images/mage pack.jpg" class="card-image" alt="Mage Pack">
-      <div class="card-label">Mage Pack - 200 coins</div>
-      <button onclick="buyPack('mage', 200)">Buy</button>
-    </div>
-    <!-- Support -->
-    <div class="card-slot-container">
-      <img src="images/support pack.jpg" class="card-image" alt="Support Pack">
-      <div class="card-label">Support Pack - 200 coins</div>
-      <button onclick="buyPack('support', 200)">Buy</button>
-    </div>
-    <!-- DPS -->
-    <div class="card-slot-container">
-      <img src="images/dps pack.jpg" class="card-image" alt="DPS Pack">
-      <div class="card-label">DPS Pack - 200 coins</div>
-      <button onclick="buyPack('dps', 200)">Buy</button>
-    </div>
-    <!-- Spirit -->
-    <div class="card-slot-container">
-      <img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack">
-      <div class="card-label">Spirit Pack - 200 coins</div>
-      <button onclick="buyPack('spirit', 200)">Buy</button>
-    </div>
-    <!-- Hacker -->
-    <div class="card-slot-container">
-      <img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack">
-      <div class="card-label">Hacker Pack - 200 coins</div>
-      <button onclick="buyPack('hacker', 200)">Buy</button>
-    </div>
-    <!-- Specialist -->
-    <div class="card-slot-container">
-      <img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack">
-      <div class="card-label">Specialist Pack - 500 coins</div>
-      <button onclick="buyPack('specialist', 500)">Buy</button>
-    </div>
+    <div class="card-slot-container"><img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack"><div class="card-label">Debuffer Pack - 200 coins</div><button onclick="buyPack('debuffer', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/mage pack.jpg" class="card-image" alt="Mage Pack"><div class="card-label">Mage Pack - 200 coins</div><button onclick="buyPack('mage', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/support pack.jpg" class="card-image" alt="Support Pack"><div class="card-label">Support Pack - 200 coins</div><button onclick="buyPack('support', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/dps pack.jpg" class="card-image" alt="DPS Pack"><div class="card-label">DPS Pack - 200 coins</div><button onclick="buyPack('dps', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack"><div class="card-label">Spirit Pack - 200 coins</div><button onclick="buyPack('spirit', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack"><div class="card-label">Hacker Pack - 200 coins</div><button onclick="buyPack('hacker', 200)">Buy</button></div>
+    <div class="card-slot-container"><img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack"><div class="card-label">Specialist Pack - 500 coins</div><button onclick="buyPack('specialist', 500)">Buy</button></div>
   </div>
 
   <!-- Pack Opening Modal -->
-  <div id="pack-opening" style="
-      position: fixed; top:0; left:0;
-      width:100vw; height:100vh;
-      background:rgba(0,0,0,0.85);
-      display:none; justify-content:center; align-items:center;
-      z-index:9999;">
-    <div style="
-        background:#222; padding:20px; border-radius:12px;
-        text-align:center; position:relative;">
+  <div id="pack-opening" style="position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); display:none; justify-content:center; align-items:center; z-index:9999;">
+    <div style="background:#222; padding:20px; border-radius:12px; text-align:center; position:relative;">
       <img id="pack-image" src="" alt="Pack" style="max-width:220px; cursor:pointer; transition:transform 0.1s">
       <p id="click-prompt" style="color:gold; font-weight:bold; margin-top:12px; font-size:1.2rem;"></p>
       <img id="card-image" src="" alt="Card" style="margin-top:20px; max-width:180px; display:none;">
@@ -88,7 +44,7 @@
   </div>
 
   <script>
-    // Firebase init
+    // Firebase Setup
     const firebaseConfig = {
       apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
       authDomain: "card-game-51dd7.firebaseapp.com",
@@ -124,6 +80,28 @@
       }).then(() => triggerPackOpening(name));
     }
 
+    function getRandomCardFromGeneralist() {
+      const rand = Math.random() * 100;
+      let cardNum;
+
+      if (rand < 85) {
+        // Common 1-43
+        cardNum = Math.floor(Math.random() * 43) + 1;
+      } else if (rand < 95) {
+        // Rare 44-49
+        cardNum = Math.floor(Math.random() * 6) + 44;
+      } else if (rand < 99) {
+        // Epic 50-55
+        cardNum = Math.floor(Math.random() * 6) + 50;
+      } else {
+        // Legendary 56-61
+        cardNum = Math.floor(Math.random() * 6) + 56;
+      }
+
+      const padded = String(cardNum).padStart(3, '0');
+      return `images/card-${padded}.PNG`;
+    }
+
     function triggerPackOpening(name) {
       const modal = document.getElementById('pack-opening');
       const imgPack = document.getElementById('pack-image');
@@ -131,7 +109,7 @@
       const prompt = document.getElementById('click-prompt');
 
       // Set pack image
-      const ext = name==='generalist'? 'png':'jpg';
+      const ext = name === 'generalist' ? 'png' : 'jpg';
       imgPack.src = `images/${name} pack.${ext}`;
 
       // Reset card & state
@@ -140,22 +118,32 @@
       prompt.textContent = "Click!";
       modal.style.display = 'flex';
 
-      let clicks=0, opened=false;
+      let clicks = 0;
+      let opened = false;
+      let finalCard = null;
+
+      if (name === 'generalist') {
+        finalCard = getRandomCardFromGeneralist();
+      }
+
       imgPack.onclick = () => {
         if (opened) return;
         clicks++;
         imgPack.style.transform = 'scale(1.1)';
-        setTimeout(()=> imgPack.style.transform='scale(1)',150);
-        if (clicks>=3) {
-          imgCard.src = 'images/card-placeholder.jpg';
+        setTimeout(() => imgPack.style.transform = 'scale(1)', 150);
+        if (clicks >= 3) {
+          opened = true;
+          imgCard.src = finalCard || 'images/card-placeholder.jpg';
           imgCard.style.display = 'block';
           prompt.textContent = "";
-          opened = true;
         }
       };
 
       modal.onclick = e => {
-        if (opened && e.target===modal) modal.style.display='none';
+        if (opened && e.target === modal) {
+          modal.style.display = 'none';
+          imgPack.onclick = null;
+        }
       };
     }
   </script>
