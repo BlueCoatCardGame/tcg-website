@@ -66,7 +66,7 @@
     <div class="burst-pack">
       <img id="pack-image" class="pack-image" src="" alt="Pack">
       <p id="click-prompt" class="click-prompt">Click!</p>
-      <img id="card-image" class="revealed-card hidden" alt="Card">
+      <img id="card-image" class="revealed-card hidden" alt="Card" style="display: none;">
     </div>
   </div>
 
@@ -152,8 +152,10 @@
       const prompt  = document.getElementById('click-prompt');
       const ext     = name==='generalist' ? 'png' : 'jpg';
 
+      // Reset card image
+      imgCard.src = '';
+      imgCard.style.display = 'none';
       imgCard.className = 'revealed-card hidden';
-      imgCard.removeAttribute('src');
       prompt.textContent = 'Click!';
       imgPack.classList.remove('glowing-pack');
 
@@ -178,6 +180,7 @@
         if (clicks >= maxClicks) {
           opened = true;
           imgCard.src = draw.path;
+          imgCard.style.display = 'block';
           imgCard.classList.remove('hidden');
           imgCard.classList.add(`rarity-${draw.rarity}`);
           prompt.textContent = draw.rarity !== 'common'
