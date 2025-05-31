@@ -137,10 +137,10 @@
 
     function getRandomCardFromSpecialist() {
       const rand = Math.random()*100;
-      const rarity = rand < 75 ? 'common' :
-                     rand < 90 ? 'rare' :
-                     rand < 96 ? 'epic' :
-                     rand < 99.5 ? 'legendary' :
+      const rarity = rand < 40 ? 'common' :
+                     rand < 55 ? 'rare' :
+                     rand < 70 ? 'epic' :
+                     rand < 80 ? 'legendary' :
                                    'godly';
       let n;
       if (rarity === 'common')       n = Math.floor(Math.random()*43)+1;
