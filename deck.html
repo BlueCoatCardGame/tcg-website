@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Your Deck</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+  <h1>Your Deck</h1>
+  <p>Manage and view your deck here.</p>
+
+  <button onclick="window.location.href='index.html'">Back to Hub</button>
+
+  <script>
+    // Firebase config and initialization
+    const firebaseConfig = {
+      apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
+      authDomain: "card-game-51dd7.firebaseapp.com",
+      projectId: "card-game-51dd7",
+      storageBucket: "card-game-51dd7.appspot.com",
+      messagingSenderId: "1059333480213",
+      appId: "1:1059333480213:web:9787cdf5da0242aebf531c",
+      databaseURL: "https://card-game-51dd7-default-rtdb.firebaseio.com"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // Check if user is logged in
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        alert("You must be logged in to view this page.");
+        window.location.href = "index.html";
+      } else {
+        // Optional: Load deck data here using user.uid
+        console.log("User is logged in:", user.uid);
+      }
+    });
+  </script>
+</body>
+</html>
