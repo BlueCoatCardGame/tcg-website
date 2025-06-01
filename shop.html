@@ -154,6 +154,23 @@
       };
     }
 
+    function getRandomCardFromDebuffer() {
+      const rand = Math.random()*100;
+      const rarity = rand < 70 ? 'common' :
+                     rand < 90 ? 'rare' :
+                     rand < 98 ? 'epic' :
+                                 'legendary';
+      let n;
+      if (rarity === 'common')       n = Math.floor(Math.random()*10)+70;
+      else if (rarity === 'rare')    n = Math.floor(Math.random()*5)+80;
+      else if (rarity === 'epic')    n = Math.floor(Math.random()*3)+85;
+      else                           n = Math.floor(Math.random()*2)+88;
+      return {
+        path: `images/card-${String(n).padStart(3,'0')}.PNG`,
+        rarity
+      };
+    }
+
     function triggerPackOpening(name) {
       const modal   = document.getElementById('pack-opening');
       const imgPack = document.getElementById('pack-image');
@@ -171,6 +188,7 @@
       let draw = {path:'',rarity:'common'};
       if (name==='generalist')   draw = getRandomCardFromGeneralist();
       if (name==='specialist')   draw = getRandomCardFromSpecialist();
+      if (name==='debuffer')     draw = getRandomCardFromDebuffer();
 
       console.log('>> REVEALING:', draw.path, draw.rarity);
 
@@ -189,7 +207,6 @@
         imgPack.style.transform='scale(1.1)';
         setTimeout(()=>imgPack.style.transform='scale(1)',150);
 
-        // handle godly 2‑phase
         if (draw.rarity==='godly' && !phaseTwo && clicks>=5) {
           phaseTwo=true;
           clicks=0;
