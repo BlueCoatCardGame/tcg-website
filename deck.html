@@ -11,8 +11,24 @@
 <body>
   <h1>Your Deck</h1>
   <p>Manage and view your deck here.</p>
+  <button onclick="window.location.href='index.html'">Back to Home</button>
 
-  <button onclick="window.location.href='index.html'">Back to Hub</button>
+  <!-- CARD LAYOUT -->
+  <div class="deck-container">
+    <div class="row">
+      <div class="card-slot">1</div>
+      <div class="card-slot">2</div>
+      <div class="card-slot">3</div>
+    </div>
+    <div class="row">
+      <div class="card-slot">4</div>
+      <div class="card-slot">5</div>
+      <div class="card-slot">6</div>
+    </div>
+    <div class="row">
+      <div class="card-slot">7</div>
+    </div>
+  </div>
 
   <script>
     // Firebase config and initialization
@@ -29,17 +45,19 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    // Check if user is logged in
     auth.onAuthStateChanged(user => {
       if (!user) {
         alert("You must be logged in to view this page.");
         window.location.href = "index.html";
       } else {
-        // Optional: Load deck data here using user.uid
         console.log("User is logged in:", user.uid);
+        db.ref('users/' + user.uid + '/deck').once('value').then(snapshot => {
+          const deck = snapshot.val() || [];
+          console.log("User's deck:", deck);
+          // Optional: Render actual cards here
+        });
       }
     });
   </script>
 </body>
 </html>
-

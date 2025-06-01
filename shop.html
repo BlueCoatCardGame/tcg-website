@@ -19,49 +19,41 @@
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
 
   <div class="card-pack-grid">
-    <!-- Generalist Pack -->
     <div class="card-slot-container">
       <img src="images/generalist pack.png" class="card-image" alt="Generalist Pack">
       <div class="card-label">Generalist Pack – 150 coins</div>
       <button onclick="buyPack('generalist',150)">Buy</button>
     </div>
-    <!-- Debuffer Pack -->
     <div class="card-slot-container">
       <img src="images/debuffer pack.jpg" class="card-image" alt="Debuffer Pack">
       <div class="card-label">Debuffer Pack – 200 coins</div>
       <button onclick="buyPack('debuffer',200)">Buy</button>
     </div>
-    <!-- Mage Pack -->
     <div class="card-slot-container">
       <img src="images/mage pack.jpg" class="card-image" alt="Mage Pack">
       <div class="card-label">Mage Pack – 200 coins</div>
       <button onclick="buyPack('mage',200)">Buy</button>
     </div>
-    <!-- Support Pack -->
     <div class="card-slot-container">
       <img src="images/support pack.jpg" class="card-image" alt="Support Pack">
       <div class="card-label">Support Pack – 200 coins</div>
       <button onclick="buyPack('support',200)">Buy</button>
     </div>
-    <!-- DPS Pack -->
     <div class="card-slot-container">
       <img src="images/dps pack.jpg" class="card-image" alt="DPS Pack">
       <div class="card-label">DPS Pack – 200 coins</div>
       <button onclick="buyPack('dps',200)">Buy</button>
     </div>
-    <!-- Spirit Pack -->
     <div class="card-slot-container">
       <img src="images/spirit pack.jpg" class="card-image" alt="Spirit Pack">
       <div class="card-label">Spirit Pack – 200 coins</div>
       <button onclick="buyPack('spirit',200)">Buy</button>
     </div>
-    <!-- Hacker Pack -->
     <div class="card-slot-container">
       <img src="images/hacker pack.jpg" class="card-image" alt="Hacker Pack">
       <div class="card-label">Hacker Pack – 200 coins</div>
       <button onclick="buyPack('hacker',200)">Buy</button>
     </div>
-    <!-- Specialist Pack -->
     <div class="card-slot-container">
       <img src="images/specialist pack.jpg" class="card-image" alt="Specialist Pack">
       <div class="card-label">Specialist Pack – 500 coins</div>
@@ -69,7 +61,6 @@
     </div>
   </div>
 
-  <!-- Pack Opening Modal -->
   <div id="pack-opening" class="pack-opening hidden">
     <div class="burst-pack">
       <img id="pack-image" class="pack-image" src="" alt="Pack">
@@ -79,7 +70,6 @@
   </div>
 
   <script>
-    // Firebase Setup
     const firebaseConfig = {
       apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
       authDomain: "card-game-51dd7.firebaseapp.com",
@@ -155,18 +145,26 @@
     }
 
     function getRandomCardFromDebuffer() {
-      const rand = Math.random()*100;
-      const rarity = rand < 70 ? 'common' :
-                     rand < 90 ? 'rare' :
-                     rand < 98 ? 'epic' :
-                                 'legendary';
-      let n;
-      if (rarity === 'common')       n = Math.floor(Math.random()*10)+70;
-      else if (rarity === 'rare')    n = Math.floor(Math.random()*5)+80;
-      else if (rarity === 'epic')    n = Math.floor(Math.random()*3)+85;
-      else                           n = Math.floor(Math.random()*2)+88;
+      const rand = Math.random() * 100;
+      let rarity, cardNumbers;
+
+      if (rand < 70) {
+        rarity = 'common';
+        cardNumbers = [1, 2, 3, 4, 5, 6, 7];
+      } else if (rand < 90) {
+        rarity = 'rare';
+        cardNumbers = [44];
+      } else if (rand < 98) {
+        rarity = 'epic';
+        cardNumbers = [50];
+      } else {
+        rarity = 'legendary';
+        cardNumbers = [56];
+      }
+
+      const n = cardNumbers[Math.floor(Math.random() * cardNumbers.length)];
       return {
-        path: `images/card-${String(n).padStart(3,'0')}.PNG`,
+        path: `images/card-${String(n).padStart(3, '0')}.PNG`,
         rarity
       };
     }
@@ -178,13 +176,11 @@
       const prompt  = document.getElementById('click-prompt');
       const ext     = name==='generalist'? 'png':'jpg';
 
-      // reset
       imgCard.className = 'revealed-card hidden';
       imgCard.removeAttribute('src');
       prompt.textContent = 'Click!';
       imgPack.classList.remove('glowing-pack','red-glow');
 
-      // choose draw
       let draw = {path:'',rarity:'common'};
       if (name==='generalist')   draw = getRandomCardFromGeneralist();
       if (name==='specialist')   draw = getRandomCardFromSpecialist();
@@ -192,7 +188,6 @@
 
       console.log('>> REVEALING:', draw.path, draw.rarity);
 
-      // show modal + pack art
       modal.classList.remove('hidden');
       imgPack.src = `images/${name} pack.${ext}`;
 
@@ -206,15 +201,6 @@
         clicks++;
         imgPack.style.transform='scale(1.1)';
         setTimeout(()=>imgPack.style.transform='scale(1)',150);
-
-        if (draw.rarity==='godly' && !phaseTwo && clicks>=5) {
-          phaseTwo=true;
-          clicks=0;
-          prompt.textContent='🔥 Keep Clicking for GODLY! 🔥';
-          imgPack.classList.remove('glowing-pack');
-          imgPack.classList.add('red-glow');
-          return;
-        }
 
         if (clicks>=clickLimit) {
           opened=true;
