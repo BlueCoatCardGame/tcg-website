@@ -260,25 +260,34 @@ function triggerPackOpening(name) {
 
   const isSpecialGlow = ['rare','epic','legendary','godly'].includes(draw.rarity);
   if (isSpecialGlow) imgPack.classList.add('glowing-pack');
-  const clickLimit = 5; // fixed 5 clicks for all rares, epics, legendaries
 
-  let clicks=0, phaseTwo=false, opened=false;
+  const clickLimit = draw.rarity === 'godly' ? 10 : isSpecialGlow ? 5 : 3;
+
+  let clicks = 0, opened = false;
   imgPack.onclick = () => {
     if (opened) return;
     clicks++;
-    imgPack.style.transform='scale(1.1)';
-    setTimeout(()=>imgPack.style.transform='scale(1)',150);
+    imgPack.style.transform = 'scale(1.1)';
+    setTimeout(() => imgPack.style.transform = 'scale(1)', 150);
 
-    if (clicks>=clickLimit) {
-      opened=true;
+    if (clicks >= clickLimit) {
+      opened = true;
       imgCard.src = draw.path;
       imgCard.classList.remove('hidden');
       imgCard.classList.add(`rarity-${draw.rarity}`);
-      prompt.textContent = draw.rarity!=='common'
-        ? `\u2728 ${draw.rarity.toUpperCase()}! \u2728`
+      prompt.textContent = draw.rarity !== 'common'
+        ? `✨ ${draw.rarity.toUpperCase()}! ✨`
         : '';
     }
   };
+
+  modal.onclick = e => {
+    if (opened && e.target === modal) {
+      modal.classList.add('hidden');
+      imgPack.onclick = null;
+    }
+  };
+}
 
   modal.onclick = e => {
     if (opened && e.target===modal) {
@@ -286,7 +295,6 @@ function triggerPackOpening(name) {
       imgPack.onclick = null;
     }
   };
-}
   </script>
 </body>
 </html>
