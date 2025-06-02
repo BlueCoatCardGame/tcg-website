@@ -378,45 +378,40 @@ h1 {
   width: 100%;
 }
 
+/* === Deck Card Adjustments === */
 .card-slot {
   display: flex;
-  flex-direction: column; /* stack items vertically */
-  align-items: center;     /* center horizontally */
-  justify-content: flex-start;
-  width: 140px;
-  height: 200px;
-  border: 2px dashed #666;
-  border-radius: 12px;
-  background-color: #2b2b2b;
-  color: #ccc;
-  transition: background-color 0.2s, transform 0.2s;
+  flex-direction: column;
+  align-items: center;
   padding: 10px;
   box-sizing: border-box;
 }
 
-.card-class-name {
-  font-size: 0.95rem;
-  font-weight: bold;
-  color: #aaa;
-  text-align: center;
+.card {
+  width: 100px;
+  height: 140px;
+  background-color: #444;
+  border: 2px solid #666;
+  border-radius: 12px;
+  transition: transform 0.2s, background-color 0.2s;
 }
 
-.card-slot:hover {
-  background-color: #3a3a3a;
+.card-slot:hover .card {
+  background-color: #555;
   transform: scale(1.05);
-  cursor: pointer;
 }
 
 .card-class-name {
+  margin-top: 8px;
   font-size: 0.95rem;
   font-weight: bold;
   text-align: center;
-  margin-top: 8px;
+  color: #ccc;
 }
 
-.class-debuffer { color: #00ff00; }  /* Green */
-.class-mage     { color: #a020f0; }  /* Purple */
-.class-support  { color: #ffd700; }  /* Gold */
-.class-dps      { color: #ff4040; }  /* Red */
-.class-spirit   { color: #40bfff; }  /* Blue */
-.class-hacker   { color: #ff69b4; }  /* Pink */
+.class-debuffer { color: #00ff00; }
+.class-mage     { color: #a020f0; }
+.class-support  { color: #ffd700; }
+.class-dps      { color: #ff4040; }
+.class-spirit   { color: #40bfff; }
+.class-hacker   { color: #ff69b4; }

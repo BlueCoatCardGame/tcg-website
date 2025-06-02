@@ -14,42 +14,49 @@
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
 
   <!-- CARD LAYOUT -->
-<div class="deck-container">
-  <div class="row">
-    <div class="card-slot">
-      <div>1</div>
-      <div class="card-class-name class-debuffer">Debuffer</div>
+  <div class="deck-container">
+    <div class="row">
+      <div class="card-slot">
+        <div class="card"></div>
+        <div class="card-class-name class-debuffer">Debuffer</div>
+      </div>
+      <div class="card-slot">
+        <div class="card"></div>
+        <div class="card-class-name class-mage">Mage</div>
+      </div>
+      <div class="card-slot">
+        <div class="card"></div>
+        <div class="card-class-name class-support">Support</div>
+      </div>
     </div>
-    <div class="card-slot">
-      <div>2</div>
-      <div class="card-class-name class-mage">Mage</div>
+
+    <div class="row">
+      <div class="card-slot">
+        <div class="card"></div>
+        <div class="card-class-name class-dps">Dps</div>
+      </div>
+      <div class="card-slot">
+        <div class="card"></div>
+        <div class="card-class-name class-spirit">Spirit</div>
+      </div>
+      <div class="card-slot">
+        <div class="card"></div>
+        <div class="card-class-name class-hacker">Hacker</div>
+      </div>
     </div>
-    <div class="card-slot">
-      <div>3</div>
-      <div class="card-class-name class-support">Support</div>
+
+    <!-- Card Loadouts Button -->
+    <div style="margin-top: 40px; text-align: center;">
+      <button class="button">Card Loadouts</button>
+    </div>
+
+    <div class="row">
+      <div class="card-slot">
+        <div class="card"></div>
+        <div class="card-class-name">???</div>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="card-slot">
-      <div>4</div>
-      <div class="card-class-name class-dps">Dps</div>
-    </div>
-    <div class="card-slot">
-      <div>5</div>
-      <div class="card-class-name class-spirit">Spirit</div>
-    </div>
-    <div class="card-slot">
-      <div>6</div>
-      <div class="card-class-name class-hacker">Hacker</div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="card-slot">
-      <div>7</div>
-      <div class="card-class-name">???</div>
-    </div>
-  </div>
-</div>
 
   <script>
     // Firebase config and initialization
@@ -62,6 +69,7 @@
       appId: "1:1059333480213:web:9787cdf5da0242aebf531c",
       databaseURL: "https://card-game-51dd7-default-rtdb.firebaseio.com"
     };
+
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
