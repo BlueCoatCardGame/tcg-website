@@ -379,18 +379,26 @@ h1 {
 }
 
 .card-slot {
+  display: flex;
+  flex-direction: column; /* stack items vertically */
+  align-items: center;     /* center horizontally */
+  justify-content: flex-start;
   width: 140px;
   height: 200px;
   border: 2px dashed #666;
   border-radius: 12px;
   background-color: #2b2b2b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1.5rem;
   color: #ccc;
   transition: background-color 0.2s, transform 0.2s;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.card-class-name {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #aaa;
+  text-align: center;
 }
 
 .card-slot:hover {
