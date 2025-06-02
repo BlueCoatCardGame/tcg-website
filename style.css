@@ -406,3 +406,17 @@ h1 {
   transform: scale(1.05);
   cursor: pointer;
 }
+
+.card-class-name {
+  font-size: 0.95rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.class-debuffer { color: #00ff00; }  /* Green */
+.class-mage     { color: #a020f0; }  /* Purple */
+.class-support  { color: #ffd700; }  /* Gold */
+.class-dps      { color: #ff4040; }  /* Red */
+.class-spirit   { color: #40bfff; }  /* Blue */
+.class-hacker   { color: #ff69b4; }  /* Pink */
