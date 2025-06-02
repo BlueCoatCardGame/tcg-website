@@ -14,9 +14,7 @@
   <div class="coin-display">
     💰 <span id="coinCount">0</span>
   </div>
-<div class="diamond-display">
-  💎 <span id="diamondCount">0</span>
-</div>
+
   <h1>Welcome to the Shop!</h1>
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
 
@@ -95,12 +93,6 @@ auth.onAuthStateChanged(user => {
       currentCoins = snap.val()||0;
       document.getElementById('coinCount').textContent = currentCoins;
     });
-    let currentDiamonds = 0;
-db.ref(`users/${currentUserId}/diamonds`)
-  .on('value', snap => {
-    currentDiamonds = snap.val()||0;
-    document.getElementById('diamondCount').textContent = currentDiamonds;
-  });
 });
 
 function buyPack(name, cost) {

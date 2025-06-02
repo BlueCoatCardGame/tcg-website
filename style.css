@@ -378,27 +378,18 @@ h1 {
   width: 100%;
 }
 
-/* === Deck Card Adjustments === */
-.card-slot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  box-sizing: border-box;
+
+.card-class-name {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #aaa;
+  text-align: center;
 }
 
-.card {
-  width: 100px;
-  height: 140px;
-  background-color: #444;
-  border: 2px solid #666;
-  border-radius: 12px;
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-.card-slot:hover .card {
-  background-color: #555;
+.card-slot:hover {
+  background-color: #3a3a3a;
   transform: scale(1.05);
+  cursor: pointer;
 }
 
 .card-class-name {
