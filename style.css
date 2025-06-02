@@ -365,19 +365,17 @@ h1 {
 .deck-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* This centers the .row elements horizontally */
+  justify-content: center;
   margin-top: 40px;
   gap: 20px;
-  width: 100%; /* Ensure full width */
-  max-width: 600px; /* Limit to avoid mobile stacking */
 }
 
 .row {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  gap: 20px !important;
-  border: 1px solid transparent; /* Change to red to debug if needed */
+  display: flex;
+  justify-content: center; /* This centers the .card-slot elements horizontally */
+  gap: 20px;
+  width: 100%;
 }
 
 .card-slot {
@@ -393,4 +391,10 @@ h1 {
   font-size: 1.5rem;
   color: #ccc;
   transition: background-color 0.2s, transform 0.2s;
+}
+
+.card-slot:hover {
+  background-color: #3a3a3a;
+  transform: scale(1.05);
+  cursor: pointer;
 }
