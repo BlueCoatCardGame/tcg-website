@@ -5,7 +5,6 @@
   <title>Locker</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Tabs */
     .class-tabs {
       display: flex;
       justify-content: center;
@@ -33,7 +32,6 @@
       background-color: #666;
     }
 
-    /* Grid */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -47,13 +45,14 @@
       width: 100%;
       aspect-ratio: 2 / 3;
       background-color: #2e2e2e;
-      border: 2px dashed #555;
       border-radius: 12px;
-      transition: background-color 0.3s;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.3s;
     }
 
     .card-slot:hover {
-      background-color: #3a3a3a;
+      transform: scale(1.03);
       cursor: pointer;
     }
 
@@ -74,10 +73,8 @@
 
   <p>This is your locker. You can store and view your collected cards here.</p>
 
-  <!-- Back Button -->
   <button class="button" onclick="window.location.href='index.html'">Back to Home</button>
 
-  <!-- Class Tabs -->
   <div class="class-tabs">
     <button class="class-tab active" data-tab="all">All</button>
     <button class="class-tab" data-tab="debuffer">Debuffer</button>
@@ -88,7 +85,6 @@
     <button class="class-tab" data-tab="hacker">Hacker</button>
   </div>
 
-  <!-- Card Grids -->
   <div id="all" class="card-grid"></div>
   <div id="debuffer" class="card-grid hidden"></div>
   <div id="mage" class="card-grid hidden"></div>
@@ -98,56 +94,73 @@
   <div id="hacker" class="card-grid hidden"></div>
 
   <script>
-  // Tab switching logic
-  const tabs = document.querySelectorAll('.class-tab');
-  const grids = document.querySelectorAll('.card-grid');
+    const tabs = document.querySelectorAll('.class-tab');
+    const grids = document.querySelectorAll('.card-grid');
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
 
-      const targetId = tab.getAttribute('data-tab');
-      grids.forEach(grid => {
-        grid.id === targetId ? grid.classList.remove('hidden') : grid.classList.add('hidden');
+        const targetId = tab.getAttribute('data-tab');
+        grids.forEach(grid => {
+          grid.id === targetId ? grid.classList.remove('hidden') : grid.classList.add('hidden');
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-  });
 
-  // Generate cards
-  const cardCounts = {
-    all: 66,
-    debuffer: 12,
-    mage: 12,
-    support: 12,
-    dps: 12,
-    spirit: 12,
-    hacker: 12
-  };
+    const cardGroups = [
+      { id: 'debuffer', range: [1, 10] },
+      { id: 'mage',     range: [11, 20] },
+      { id: 'support',  range: [21, 30] },
+      { id: 'dps',      range: [31, 40] },
+      { id: 'spirit',   range: [41, 50] },
+      { id: 'hacker',   range: [51, 60] },
+    ];
 
-  Object.entries(cardCounts).forEach(([id, count]) => {
-    const container = document.getElementById(id);
-    for (let i = 1; i <= count; i++) {
+    const gridsById = {
+      all: document.getElementById('all'),
+      debuffer: document.getElementById('debuffer'),
+      mage: document.getElementById('mage'),
+      support: document.getElementById('support'),
+      dps: document.getElementById('dps'),
+      spirit: document.getElementById('spirit'),
+      hacker: document.getElementById('hacker'),
+    };
+
+    function addCard(container, number) {
+      const padded = String(number).padStart(3, '0');
       const wrapper = document.createElement('div');
 
       const slot = document.createElement('div');
       slot.className = 'card-slot';
+      slot.style.backgroundImage = `url('cards/lock-${padded}.jpg')`;
 
       const label = document.createElement('div');
       label.className = 'card-label';
-      label.textContent = id === 'all' ? 'All Cards' : `${capitalize(id)} ${i}`;
+      label.textContent = `Card ${padded}`;
 
       wrapper.appendChild(slot);
       wrapper.appendChild(label);
       container.appendChild(wrapper);
     }
-  });
 
-  function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-</script>
+    // Add to specific class tabs and all
+    cardGroups.forEach(({ id, range }) => {
+      const container = gridsById[id];
+      for (let i = range[0]; i <= range[1]; i++) {
+        addCard(container, i);
+        addCard(gridsById['all'], i); // Also add to "all"
+      }
+    });
+
+    // Insert Card 064 (extra) before godlies in "all"
+    addCard(gridsById['all'], 64);
+
+    // Godlies 061-063
+    [61, 62, 63].forEach(i => addCard(gridsById['all'], i));
+  </script>
 </body>
 </html>
