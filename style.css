@@ -443,8 +443,9 @@ h1 {
 }
 
 .loadout-row .card {
-  width: 140px;
-  height: 200px;
+  width: 120px;   /* updated width */
+  height: 160px;  /* updated height */
+  object-fit: contain; /* keeps image proportion */
 }
 
 .loadouts-panel.show {

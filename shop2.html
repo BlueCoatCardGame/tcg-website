@@ -11,7 +11,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   
   <style>
-    /* Minimal inline adjustments—rest of styling comes from style.css */
     body {
       background-color: #1e1e1e;
       color: white;
@@ -44,7 +43,7 @@
     }
     .corrupted-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      grid-template-columns: repeat(3, 1fr); /* Now forced into 2 rows of 3 */
       gap: 20px;
       max-width: 800px;
       margin: 20px auto;
@@ -91,6 +90,7 @@
 <body>
 
   <h1>Diamond shop</h1>
+  <button class="button" onclick="window.location.href='shop.html'">Back to shop</button>
 
   <div class="currency-display">
     <div class="currency-box">
@@ -135,7 +135,6 @@
     let convertBtn = document.getElementById("convertBtn");
     let corruptGrid = document.getElementById("corruptGrid");
 
-    // As soon as the user is logged in, load their coins + diamonds
     auth.onAuthStateChanged(user => {
       if (!user) {
         alert("Please log in first.");
@@ -144,7 +143,6 @@
       }
       currentUserId = user.uid;
 
-      // Listen to 'coins' and 'diamonds' in realtime
       const userRef = db.ref(`users/${currentUserId}`);
       userRef.on("value", snapshot => {
         const data = snapshot.val() || {};
@@ -154,48 +152,40 @@
         coinCountElem.textContent = coins;
         diamondCountElem.textContent = diamonds;
 
-        // Enable/disable the converter button
         convertBtn.disabled = (diamonds < 1);
-        // Also re‐render the corrupt cards' buy buttons
         renderCorruptedCards(diamonds);
       });
     });
 
-    // ─── Convert 1 💎 → 100 coins ───
+    // ─── Convert 1 💎 → 100 coins ───
     convertBtn.addEventListener("click", () => {
       const userRef = db.ref(`users/${currentUserId}`);
       userRef.transaction(userData => {
         if (!userData) return userData;
         userData.diamonds = (userData.diamonds || 0) - 1;
-        userData.coins    = (userData.coins    || 0) + 100;
+        userData.coins = (userData.coins || 0) + 100;
         return userData;
       });
     });
 
-    // ─── Corrupted Cards (065–070) Setup ───
-    // We’ll keep an array of those six card IDs:
-    const corruptedCardIDs = ["065","066","067","068","069","070"];
-    // Each costs 25 💎
+    // ─── Corrupted Cards (065–070) ───
+    const corruptedCardIDs = ["065", "066", "067", "068", "069", "070"];
     const corruptCost = 25;
 
     function renderCorruptedCards(currentDiamonds) {
-      // Clear previous
       corruptGrid.innerHTML = "";
 
       corruptedCardIDs.forEach(id => {
         const cardDiv = document.createElement("div");
         cardDiv.classList.add("corrupt-card");
 
-        // Image tag
         const img = document.createElement("img");
         img.src = `images/card-${id}.PNG`;
         img.alt = `Corrupted Card ${id}`;
         cardDiv.appendChild(img);
 
-        // “Buy for 25 💎” button
         const btn = document.createElement("button");
         btn.textContent = `Buy for ${corruptCost} 💎`;
-        // Disable if not enough diamonds
         btn.disabled = (currentDiamonds < corruptCost);
         btn.addEventListener("click", () => {
           buyCorruptedCard(id);
@@ -211,11 +201,9 @@
       userRef.transaction(userData => {
         if (!userData) return userData;
         const diamonds = userData.diamonds || 0;
-        if (diamonds < corruptCost) {
-          return; // abort if not enough
-        }
+        if (diamonds < corruptCost) return;
+
         userData.diamonds = diamonds - corruptCost;
-        // You can push this cardID into a “corruptedOwned” list:
         userData.corruptedOwned = userData.corruptedOwned || [];
         if (!userData.corruptedOwned.includes(cardID)) {
           userData.corruptedOwned.push(cardID);
