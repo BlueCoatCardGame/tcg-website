@@ -444,7 +444,7 @@ h1 {
 
 .loadout-row .card {
   width: 120px;   /* updated width */
-  height: 120px;  /* updated height */
+  height: 160px;  /* updated height */
   object-fit: contain; /* keeps image proportion */
 }
 
