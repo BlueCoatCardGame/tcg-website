@@ -47,7 +47,7 @@
 
     <!-- Card Loadouts Button -->
     <div style="margin-top: 40px; text-align: center;">
-      <button class="button">Card Loadouts</button>
+      <button class="button" onclick="toggleLoadouts()">Card Loadouts</button>
     </div>
 
     <div class="row">
@@ -58,6 +58,33 @@
     </div>
   </div>
 
+  <!-- Slide-out Loadouts Panel -->
+  <div id="loadoutsPanel" class="loadouts-panel">
+    <h2>Card Loadouts</h2>
+    <div class="loadout-sets">
+      <!-- 5 sets, each with 6 card placeholders -->
+      <div class="loadout-row">
+        <div class="card"></div><div class="card"></div><div class="card"></div>
+        <div class="card"></div><div class="card"></div><div class="card"></div>
+      </div>
+      <div class="loadout-row">
+        <div class="card"></div><div class="card"></div><div class="card"></div>
+        <div class="card"></div><div class="card"></div><div class="card"></div>
+      </div>
+      <div class="loadout-row">
+        <div class="card"></div><div class="card"></div><div class="card"></div>
+        <div class="card"></div><div class="card"></div><div class="card"></div>
+      </div>
+      <div class="loadout-row">
+        <div class="card"></div><div class="card"></div><div class="card"></div>
+        <div class="card"></div><div class="card"></div><div class="card"></div>
+      </div>
+      <div class="loadout-row">
+        <div class="card"></div><div class="card"></div><div class="card"></div>
+        <div class="card"></div><div class="card"></div><div class="card"></div>
+      </div>
+    </div>
+  </div>
   <script>
     // Firebase config and initialization
     const firebaseConfig = {
@@ -87,6 +114,12 @@
         });
       }
     });
+
+    // Toggle loadouts panel
+    function toggleLoadouts() {
+      const panel = document.getElementById("loadoutsPanel");
+      panel.classList.toggle("show");
+    }
   </script>
 </body>
 </html>

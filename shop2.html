@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop 2 – Diamonds</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  
+  <style>
+    /* Minimal inline adjustments—rest of styling comes from style.css */
+    body {
+      background-color: #1e1e1e;
+      color: white;
+      font-family: 'Segoe UI Emoji','Noto Color Emoji','Apple Color Emoji',Arial,sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      margin-bottom: 24px;
+    }
+    .currency-display {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .currency-box {
+      background-color: #333;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .diamond-section {
+      margin-top: 40px;
+      border-top: 1px solid #444;
+      padding-top: 30px;
+    }
+    .corrupted-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 20px;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    .corrupt-card {
+      background-color: #2a2a2a;
+      padding: 12px;
+      border-radius: 8px;
+    }
+    .corrupt-card img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .corrupt-card button {
+      margin-top: 8px;
+      background-color: #00e5ff;
+      border: none;
+      border-radius: 6px;
+      color: #1e1e1e;
+      font-weight: bold;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+    .corrupt-card button:disabled {
+      background-color: #555;
+      cursor: default;
+    }
+    .convert-button {
+      margin-top: 24px;
+      background-color: #ffd600;
+      border: none;
+      border-radius: 6px;
+      color: #1e1e1e;
+      font-weight: bold;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+    .convert-button:disabled {
+      background-color: #555;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Shop 2 – Diamonds</h1>
+
+  <div class="currency-display">
+    <div class="currency-box">
+      💰 <span id="coinCount">0</span>
+    </div>
+    <div class="currency-box">
+      💎 <span id="diamondCount">0</span>
+    </div>
+  </div>
+
+  <!-- Diamond → Coin Converter -->
+  <button id="convertBtn" class="convert-button" disabled>
+    Convert 1 💎 → 100 coins
+  </button>
+
+  <!-- Corrupted Cards Section -->
+  <div class="diamond-section">
+    <h2>Corrupted Cards (Costs 25 💎 each)</h2>
+    <div class="corrupted-grid" id="corruptGrid">
+      <!-- Six cards (065–070) will be injected here -->
+    </div>
+  </div>
+
+  <script>
+    // ─── Firebase Initialization ───
+    const firebaseConfig = {
+      apiKey: "AIzaSyANtfKFonwEu6ewUS6yNYM8qZBkf2aFcIo",
+      authDomain: "card-game-51dd7.firebaseapp.com",
+      projectId: "card-game-51dd7",
+      storageBucket: "card-game-51dd7.appspot.com",
+      messagingSenderId: "1059333480213",
+      appId: "1:1059333480213:web:9787cdf5da0242aebf531c",
+      databaseURL: "https://card-game-51dd7-default-rtdb.firebaseio.com"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db   = firebase.database();
+
+    let currentUserId = null;
+    let coinCountElem = document.getElementById("coinCount");
+    let diamondCountElem = document.getElementById("diamondCount");
+    let convertBtn = document.getElementById("convertBtn");
+    let corruptGrid = document.getElementById("corruptGrid");
+
+    // As soon as the user is logged in, load their coins + diamonds
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        alert("Please log in first.");
+        window.location.href = "index.html";
+        return;
+      }
+      currentUserId = user.uid;
+
+      // Listen to 'coins' and 'diamonds' in realtime
+      const userRef = db.ref(`users/${currentUserId}`);
+      userRef.on("value", snapshot => {
+        const data = snapshot.val() || {};
+        const coins = data.coins || 0;
+        const diamonds = data.diamonds || 0;
+
+        coinCountElem.textContent = coins;
+        diamondCountElem.textContent = diamonds;
+
+        // Enable/disable the converter button
+        convertBtn.disabled = (diamonds < 1);
+        // Also re‐render the corrupt cards' buy buttons
+        renderCorruptedCards(diamonds);
+      });
+    });
+
+    // ─── Convert 1 💎 → 100 coins ───
+    convertBtn.addEventListener("click", () => {
+      const userRef = db.ref(`users/${currentUserId}`);
+      userRef.transaction(userData => {
+        if (!userData) return userData;
+        userData.diamonds = (userData.diamonds || 0) - 1;
+        userData.coins    = (userData.coins    || 0) + 100;
+        return userData;
+      });
+    });
+
+    // ─── Corrupted Cards (065–070) Setup ───
+    // We’ll keep an array of those six card IDs:
+    const corruptedCardIDs = ["065","066","067","068","069","070"];
+    // Each costs 25 💎
+    const corruptCost = 25;
+
+    function renderCorruptedCards(currentDiamonds) {
+      // Clear previous
+      corruptGrid.innerHTML = "";
+
+      corruptedCardIDs.forEach(id => {
+        const cardDiv = document.createElement("div");
+        cardDiv.classList.add("corrupt-card");
+
+        // Image tag
+        const img = document.createElement("img");
+        img.src = `images/card-${id}.PNG`;
+        img.alt = `Corrupted Card ${id}`;
+        cardDiv.appendChild(img);
+
+        // “Buy for 25 💎” button
+        const btn = document.createElement("button");
+        btn.textContent = `Buy for ${corruptCost} 💎`;
+        // Disable if not enough diamonds
+        btn.disabled = (currentDiamonds < corruptCost);
+        btn.addEventListener("click", () => {
+          buyCorruptedCard(id);
+        });
+        cardDiv.appendChild(btn);
+
+        corruptGrid.appendChild(cardDiv);
+      });
+    }
+
+    function buyCorruptedCard(cardID) {
+      const userRef = db.ref(`users/${currentUserId}`);
+      userRef.transaction(userData => {
+        if (!userData) return userData;
+        const diamonds = userData.diamonds || 0;
+        if (diamonds < corruptCost) {
+          return; // abort if not enough
+        }
+        userData.diamonds = diamonds - corruptCost;
+        // You can push this cardID into a “corruptedOwned” list:
+        userData.corruptedOwned = userData.corruptedOwned || [];
+        if (!userData.corruptedOwned.includes(cardID)) {
+          userData.corruptedOwned.push(cardID);
+        }
+        return userData;
+      }).then(() => {
+        alert(`You successfully purchased corrupted card ${cardID}!`);
+      });
+    }
+  </script>
+</body>
+</html>
