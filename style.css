@@ -418,14 +418,9 @@ h1 {
 }
 
 .card-slot {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  background-color: #2e2e2e;
-  border-radius: 12px;
-  background-size: contain;         /* <-- changed from cover */
-  background-repeat: no-repeat;     /* <-- new */
-  background-position: center;
-  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .loadouts-panel {
@@ -594,3 +589,22 @@ h1 {
   color: #ccc;
 }
 
+/* === Responsive Grid for Locker Cards === */
+@media (max-width: 768px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .card-slot {
+    aspect-ratio: 2 / 3;
+    width: 100%;
+  }
+}
